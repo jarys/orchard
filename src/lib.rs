@@ -17,6 +17,8 @@
 #![deny(missing_docs)]
 #![deny(unsafe_code)]
 
+extern crate no_std_compat as std;
+
 #[cfg(feature = "std")] // TODO: make it no_std
 mod address;
 #[cfg(feature = "std")]

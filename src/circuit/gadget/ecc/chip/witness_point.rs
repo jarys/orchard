@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use super::{CellValue, EccConfig, EccPoint, NonIdentityEccPoint, Var};
 
 use group::prime::PrimeCurveAffine;
@@ -148,6 +150,8 @@ impl Config {
 
 #[cfg(test)]
 pub mod tests {
+    use std::prelude::v1::*;
+
     use halo2::circuit::Layouter;
     use pasta_curves::pallas;
 

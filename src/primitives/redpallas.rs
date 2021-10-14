@@ -1,5 +1,7 @@
 //! A minimal RedPallas implementation for use in Zcash.
 
+use std::prelude::v1::*;
+
 use std::cmp::{Ord, Ordering, PartialOrd};
 use std::convert::{TryFrom, TryInto};
 

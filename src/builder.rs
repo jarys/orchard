@@ -1,5 +1,7 @@
 //! Logic for building Orchard components of transactions.
 
+use std::prelude::v1::*; // this module is std only
+
 use std::convert::TryFrom;
 use std::iter;
 
@@ -570,6 +572,7 @@ impl<V> Bundle<InProgress<Proof, PartiallyAuthorized>, V> {
 #[cfg(any(test, feature = "test-dependencies"))]
 pub mod testing {
     use incrementalmerkletree::{bridgetree::BridgeTree, Frontier, Tree};
+    use std::prelude::v1::*;
 
     use rand::{rngs::StdRng, CryptoRng, SeedableRng};
     use std::convert::TryFrom;
@@ -704,6 +707,8 @@ pub mod testing {
 
 #[cfg(test)]
 mod tests {
+    use std::prelude::v1::*;
+
     use rand::rngs::OsRng;
 
     use super::Builder;

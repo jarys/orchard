@@ -1,5 +1,7 @@
 //! Helper functions defined in the Zcash Protocol Specification.
 
+use std::prelude::v1::*;
+
 use std::iter;
 use std::ops::Deref;
 
@@ -279,6 +281,8 @@ pub fn i2lebsp<const NUM_BITS: usize>(int: u64) -> [bool; NUM_BITS] {
 
 #[cfg(test)]
 mod tests {
+    use std::prelude::v1::*;
+
     use super::{i2lebsp, lebs2ip};
 
     use group::Group;

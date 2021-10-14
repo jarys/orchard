@@ -1,5 +1,7 @@
 //! The Orchard Action circuit implementation.
 
+use std::prelude::v1::*;
+
 use group::{Curve, GroupEncoding};
 use halo2::{
     circuit::{floor_planner, Layouter},
@@ -910,6 +912,8 @@ impl Proof {
 
 #[cfg(test)]
 mod tests {
+    use std::prelude::v1::*;
+
     use ff::Field;
     use group::GroupEncoding;
     use halo2::dev::MockProver;

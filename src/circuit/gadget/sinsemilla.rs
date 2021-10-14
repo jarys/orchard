@@ -1,4 +1,7 @@
 //! Gadget and chips for the Sinsemilla hash function.
+
+use std::prelude::v1::*;
+
 use crate::circuit::gadget::{
     ecc::{self, EccInstructions},
     utilities::Var,
@@ -409,6 +412,8 @@ where
 
 #[cfg(test)]
 mod tests {
+    use std::prelude::v1::*;
+
     use halo2::{
         circuit::{Layouter, SimpleFloorPlanner},
         dev::MockProver,

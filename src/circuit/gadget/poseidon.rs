@@ -1,5 +1,7 @@
 //! Gadget and chips for the Poseidon algebraic hash function.
 
+use std::prelude::v1::*;
+
 use std::array;
 use std::fmt;
 

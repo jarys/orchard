@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use ff::{Field, PrimeFieldBits};
 use halo2::arithmetic::{CurveAffine, FieldExt};
 

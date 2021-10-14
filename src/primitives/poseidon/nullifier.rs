@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use halo2::arithmetic::Field;
 use pasta_curves::pallas;
 

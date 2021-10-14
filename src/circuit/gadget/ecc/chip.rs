@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use super::EccInstructions;
 use crate::{
     circuit::gadget::utilities::{

@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use group::Group;
 use halo2::arithmetic::CurveExt;
 use pasta_curves::{arithmetic::FieldExt, pallas};

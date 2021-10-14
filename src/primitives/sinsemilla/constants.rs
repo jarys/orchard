@@ -1,5 +1,7 @@
 //! Sinsemilla generators
 
+use std::prelude::v1::*;
+
 /// Number of bits of each message piece in $\mathsf{SinsemillaHashToPoint}$
 pub const K: usize = 10;
 

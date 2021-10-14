@@ -14,6 +14,8 @@
 //! [`Action`]: crate::bundle::Action
 //! [`Bundle`]: crate::bundle::Bundle
 
+use std::prelude::v1::*;
+
 use std::convert::{TryFrom, TryInto};
 use std::fmt::{self, Debug};
 use std::iter::Sum;
@@ -297,6 +299,8 @@ impl ValueCommitment {
 /// Generators for property testing.
 #[cfg(any(test, feature = "test-dependencies"))]
 pub mod testing {
+    use std::prelude::v1::*;
+
     use pasta_curves::{arithmetic::FieldExt, pallas};
     use proptest::prelude::*;
 

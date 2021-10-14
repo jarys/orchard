@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 pub(crate) struct TestVector {
     pub empty_roots: [[u8; 32]; 33],
 }

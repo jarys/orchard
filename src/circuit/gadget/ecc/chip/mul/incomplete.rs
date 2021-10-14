@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use std::ops::Deref;
 
 use super::super::{copy, CellValue, EccConfig, NonIdentityEccPoint, Var};

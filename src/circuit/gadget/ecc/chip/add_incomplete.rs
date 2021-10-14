@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use std::{array, collections::HashSet};
 
 use super::{copy, CellValue, EccConfig, NonIdentityEccPoint, Var};

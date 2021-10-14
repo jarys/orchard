@@ -1,5 +1,7 @@
 //! Test vectors for Orchard key components.
 
+use std::prelude::v1::*;
+
 pub(crate) struct TestVector {
     pub(crate) sk: [u8; 32],
     pub(crate) ask: [u8; 32],

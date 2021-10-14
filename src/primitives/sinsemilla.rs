@@ -1,5 +1,7 @@
 //! The Sinsemilla hash function and commitment scheme.
 
+use std::prelude::v1::*;
+
 use group::Wnaf;
 use halo2::arithmetic::{CurveAffine, CurveExt};
 use pasta_curves::pallas;
@@ -200,6 +202,8 @@ impl CommitDomain {
 
 #[cfg(test)]
 mod tests {
+    use std::prelude::v1::*;
+
     use super::{i2lebsp_k, lebs2ip_k, Pad, K};
     use rand::{self, rngs::OsRng, Rng};
 

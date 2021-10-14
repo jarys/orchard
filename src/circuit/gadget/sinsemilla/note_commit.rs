@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use halo2::{
     circuit::Layouter,
     plonk::{Advice, Column, ConstraintSystem, Error, Expression, Selector},
@@ -1427,6 +1429,8 @@ struct GateCells {
 
 #[cfg(test)]
 mod tests {
+    use std::prelude::v1::*;
+
     use super::NoteCommitConfig;
     use crate::{
         circuit::gadget::{

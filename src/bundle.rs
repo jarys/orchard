@@ -2,6 +2,9 @@
 
 pub mod commitments;
 
+use std::prelude::v1::*;
+
+#[cfg(feature = "std")]
 use std::io;
 
 use blake2b_simd::Hash as Blake2bHash;
@@ -507,6 +510,8 @@ pub struct BundleAuthorizingCommitment(pub Blake2bHash);
 /// Generators for property testing.
 #[cfg(any(test, feature = "test-dependencies"))]
 pub mod testing {
+    use std::prelude::v1::*;
+
     use nonempty::NonEmpty;
     use pasta_curves::{arithmetic::FieldExt, pallas};
     use rand::{rngs::StdRng, SeedableRng};

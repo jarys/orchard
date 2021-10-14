@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use super::{add, CellValue, EccConfig, EccPoint, NonIdentityEccPoint, Var};
 use crate::{circuit::gadget::utilities::copy, constants::T_Q};
 use std::ops::{Deref, Range};
@@ -445,6 +447,8 @@ fn decompose_for_scalar_mul(scalar: Option<pallas::Base>) -> Vec<Option<bool>> {
 
 #[cfg(test)]
 pub mod tests {
+    use std::prelude::v1::*;
+
     use group::Curve;
     use halo2::{
         circuit::{Chip, Layouter},

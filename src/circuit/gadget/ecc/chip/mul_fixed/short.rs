@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use std::{array, convert::TryInto};
 
 use super::super::{EccConfig, EccPoint, EccScalarFixedShort};

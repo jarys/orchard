@@ -1,5 +1,7 @@
 //! Test vectors for [`OrchardNullifier`].
 
+use std::prelude::v1::*;
+
 pub(crate) struct PermuteTestVector {
     pub(crate) initial_state: [[u8; 32]; 3],
     pub(crate) final_state: [[u8; 32]; 3],

@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use std::iter;
 
 use halo2::{
@@ -614,6 +616,8 @@ impl<F: FieldExt> Pow5T3State<F> {
 
 #[cfg(test)]
 mod tests {
+    use std::prelude::v1::*;
+
     use ff::PrimeField;
     use halo2::{
         arithmetic::FieldExt,

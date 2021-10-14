@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use super::super::SinsemillaInstructions;
 use super::{CellValue, NonIdentityEccPoint, SinsemillaChip, Var};
 use crate::primitives::sinsemilla::{self, lebs2ip_k, INV_TWO_POW_K, SINSEMILLA_S};

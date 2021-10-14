@@ -1,5 +1,7 @@
 //! The Poseidon algebraic hash function.
 
+use std::prelude::v1::*;
+
 use std::array;
 use std::fmt;
 use std::iter;
@@ -360,6 +362,8 @@ impl<F: FieldExt, S: Spec<F, T, RATE>, const T: usize, const RATE: usize, const 
 
 #[cfg(test)]
 mod tests {
+    use std::prelude::v1::*;
+
     use halo2::arithmetic::FieldExt;
     use pasta_curves::pallas;
 

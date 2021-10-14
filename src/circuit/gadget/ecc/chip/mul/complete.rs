@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use super::super::{add, copy, CellValue, EccConfig, EccPoint, Var};
 use super::{COMPLETE_RANGE, X, Y, Z};
 

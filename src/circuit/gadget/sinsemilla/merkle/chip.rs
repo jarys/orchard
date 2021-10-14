@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use halo2::{
     circuit::{Chip, Layouter},
     plonk::{Advice, Column, ConstraintSystem, Error, Selector},
@@ -335,6 +337,8 @@ impl MerkleInstructions<pallas::Affine, MERKLE_DEPTH_ORCHARD, { sinsemilla::K },
         // Check layer hash output against Sinsemilla primitives hash
         #[cfg(test)]
         {
+            use std::prelude::v1::*;
+
             use crate::{
                 constants::MERKLE_CRH_PERSONALIZATION, primitives::sinsemilla::HashDomain,
                 spec::i2lebsp,

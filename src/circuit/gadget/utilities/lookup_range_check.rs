@@ -1,6 +1,8 @@
 //! Make use of a K-bit lookup table to decompose a field element into K-bit
 //! words.
 
+use std::prelude::v1::*;
+
 use crate::spec::lebs2ip;
 use halo2::{
     circuit::{Layouter, Region},
@@ -369,6 +371,8 @@ impl<F: FieldExt + PrimeFieldBits, const K: usize> LookupRangeCheckConfig<F, K> 
 
 #[cfg(test)]
 mod tests {
+    use std::prelude::v1::*;
+
     use super::super::Var;
     use super::LookupRangeCheckConfig;
 

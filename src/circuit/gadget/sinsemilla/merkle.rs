@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use halo2::{
     circuit::{Chip, Layouter},
     plonk::Error,
@@ -131,6 +133,8 @@ where
 
 #[cfg(test)]
 pub mod tests {
+    use std::prelude::v1::*;
+
     use super::{
         chip::{MerkleChip, MerkleConfig},
         MerklePath,

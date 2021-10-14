@@ -1,5 +1,7 @@
 //! Key structures for Orchard.
 
+use std::prelude::v1::*;
+
 use std::convert::{TryFrom, TryInto};
 use std::io::{self, Read, Write};
 use std::mem;

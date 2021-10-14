@@ -1,5 +1,7 @@
 //! In-band secret distribution for Orchard bundles.
 
+use std::prelude::v1::*;
+
 use std::{convert::TryInto, fmt};
 
 use blake2b_simd::{Hash, Params};
@@ -313,6 +315,8 @@ impl ShieldedOutput<OrchardDomain> for CompactAction {
 
 #[cfg(test)]
 mod tests {
+    use std::prelude::v1::*;
+
     use rand::rngs::OsRng;
     use zcash_note_encryption::{
         try_compact_note_decryption, try_note_decryption, try_output_recovery_with_ovk,

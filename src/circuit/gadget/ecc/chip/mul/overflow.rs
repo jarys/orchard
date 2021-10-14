@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use super::super::{copy, CellValue, EccConfig, Var};
 use super::Z;
 use crate::{

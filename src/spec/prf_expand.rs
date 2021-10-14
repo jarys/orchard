@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use blake2b_simd::Params;
 
 const PRF_EXPAND_PERSONALIZATION: &[u8; 16] = b"Zcash_ExpandSeed";

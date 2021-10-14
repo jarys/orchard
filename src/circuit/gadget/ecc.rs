@@ -1,5 +1,7 @@
 //! Gadgets for elliptic curve operations.
 
+use std::prelude::v1::*;
+
 use std::fmt::Debug;
 
 use halo2::{
@@ -496,6 +498,8 @@ where
 
 #[cfg(test)]
 mod tests {
+    use std::prelude::v1::*;
+
     use group::{prime::PrimeCurveAffine, Curve, Group};
 
     use halo2::{

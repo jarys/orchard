@@ -209,6 +209,8 @@ impl<F: FieldExt> CondSwapChip<F> {
 
 #[cfg(test)]
 mod tests {
+    use std::prelude::v1::*;
+
     use super::super::UtilitiesInstructions;
     use super::{CondSwapChip, CondSwapConfig, CondSwapInstructions};
     use halo2::{

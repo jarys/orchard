@@ -1,5 +1,7 @@
 //! Utility functions for computing bundle commitments
 
+use std::prelude::v1::*;
+
 use blake2b_simd::{Hash as Blake2bHash, Params, State};
 use std::io::Write;
 

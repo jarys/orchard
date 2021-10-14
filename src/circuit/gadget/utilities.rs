@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use ff::PrimeFieldBits;
 use halo2::{
     circuit::{Cell, Layouter, Region},

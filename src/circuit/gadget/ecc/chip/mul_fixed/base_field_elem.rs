@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use super::super::{EccBaseFieldElemFixed, EccConfig, EccPoint, NullifierK};
 use super::H_BASE;
 

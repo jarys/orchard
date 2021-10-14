@@ -1,5 +1,7 @@
 //! The Grain LFSR in self-shrinking mode, as used by Poseidon.
 
+use std::prelude::v1::*;
+
 use std::marker::PhantomData;
 
 use bitvec::prelude::*;

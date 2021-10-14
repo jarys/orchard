@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use super::{
     add, add_incomplete, CellValue, EccBaseFieldElemFixed, EccConfig, EccScalarFixed,
     EccScalarFixedShort, NonIdentityEccPoint, Var,

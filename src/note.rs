@@ -1,4 +1,7 @@
 //! Data structures used for note construction.
+
+use std::prelude::v1::*;
+
 use group::GroupEncoding;
 use pasta_curves::pallas;
 use rand::RngCore;

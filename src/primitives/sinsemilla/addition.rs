@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use std::ops::Add;
 
 use group::{cofactor::CofactorCurveAffine, Group};

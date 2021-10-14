@@ -1,5 +1,7 @@
 //! Test vectors for Orchard key components.
 
+use std::prelude::v1::*;
+
 pub(crate) struct TestVector {
     pub(crate) incoming_viewing_key: [u8; 64],
     pub(crate) ovk: [u8; 32],

@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 pub(crate) struct TestVector {
     pub(crate) leaves: [[u8; 32]; 16],
     pub(crate) paths: [[[u8; 32]; 4]; 16],

@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 use crate::primitives::sinsemilla::{self, SINSEMILLA_S};
 use halo2::{
     circuit::Layouter,

@@ -22,6 +22,8 @@
 //! This means that $2^K$ has to be at most `degree_bound - 1` in order for
 //! the range check constraint to stay within the degree bound.
 
+use std::prelude::v1::*;
+
 use ff::PrimeFieldBits;
 use halo2::{
     circuit::Region,

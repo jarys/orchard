@@ -1,4 +1,7 @@
 //! Gadget and chips for the Sinsemilla hash function.
+
+use std::prelude::v1::*;
+
 use crate::circuit::gadget::utilities::{CellValue, Var};
 use ff::PrimeFieldBits;
 use halo2::{arithmetic::FieldExt, circuit::Cell};

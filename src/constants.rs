@@ -1,4 +1,7 @@
 //! Constants used in the Orchard protocol.
+
+use std::prelude::v1::*;
+
 use arrayvec::ArrayVec;
 use ff::{Field, PrimeField};
 use group::Curve;

@@ -65,13 +65,15 @@ bench = false
 default = ["std"]
 dev-graph = ["halo2/dev-graph", "plotters"]
 test-dependencies = ["proptest"]
+alloc = ["no-std-compat/alloc"]
+# TODO: do we really need all default features ?
 std = ["arrayvec/std", "bigint/std", "bitvec/std",
        "blake2b_simd/std", "ff/bits", "ff/std",
        "fpe/alloc", "group/alloc", "halo2",
        "lazy_static", "memuse", "rand/std",
        "rand/std_rng", "nonempty", "subtle/std",
        "subtle/i128", "zcash_note_encryption",
-       "incrementalmerkletree"]
+       "incrementalmerkletree", "alloc"]
 
 [[bench]]
 name = "note_decryption"

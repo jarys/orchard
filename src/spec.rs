@@ -1,7 +1,7 @@
 //! Helper functions defined in the Zcash Protocol Specification.
 
-use std::iter;
-use std::ops::Deref;
+use core::iter;
+use core::ops::Deref;
 
 use ff::{Field, PrimeField, PrimeFieldBits};
 use group::GroupEncoding;
@@ -277,8 +277,11 @@ pub fn i2lebsp<const NUM_BITS: usize>(int: u64) -> [bool; NUM_BITS] {
     gen_const_array(|mask: usize| (int & (1 << mask)) != 0)
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "std"))] // TODO: make no_std tests
 mod tests {
+    extern crate std;
+    use std::vec::Vec;
+
     use super::{i2lebsp, lebs2ip};
 
     use group::Group;

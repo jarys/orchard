@@ -1,21 +1,37 @@
 //! Constants used in the Orchard protocol.
+
+#[cfg(feature = "std")]
+extern crate std;
+#[cfg(feature = "std")]
+use std::vec::Vec;
+
 use arrayvec::ArrayVec;
 use ff::{Field, PrimeField};
 use group::Curve;
+#[cfg(feature = "std")]
 use halo2::arithmetic::lagrange_interpolate;
 use pasta_curves::{
     arithmetic::{CurveAffine, FieldExt},
     pallas,
 };
 
+// these modules are (TODO: hopefully) required only by halo2 stuff
+#[cfg(feature = "std")]
 pub mod commit_ivk_r;
+#[cfg(feature = "std")]
 pub mod note_commit_r;
+#[cfg(feature = "std")]
 pub mod nullifier_k;
+#[cfg(feature = "std")]
 pub mod spend_auth_g;
+#[cfg(feature = "std")]
 pub mod value_commit_r;
+#[cfg(feature = "std")]
 pub mod value_commit_v;
 
+#[cfg(feature = "std")]
 pub mod load;
+#[cfg(feature = "std")]
 pub mod util;
 
 pub use load::{NullifierK, OrchardFixedBase, OrchardFixedBasesFull, ValueCommitV};
@@ -87,6 +103,7 @@ pub const NUM_WINDOWS: usize =
 pub const NUM_WINDOWS_SHORT: usize =
     (L_VALUE + FIXED_BASE_WINDOW_SIZE - 1) / FIXED_BASE_WINDOW_SIZE;
 
+#[cfg(feature = "std")]
 /// For each fixed base, we calculate its scalar multiples in three-bit windows.
 /// Each window will have $2^3 = 8$ points.
 fn compute_window_table<C: CurveAffine>(base: C, num_windows: usize) -> Vec<[C; H]> {
@@ -138,6 +155,7 @@ fn compute_window_table<C: CurveAffine>(base: C, num_windows: usize) -> Vec<[C; 
     window_table
 }
 
+#[cfg(feature = "std")]
 /// For each window, we interpolate the $x$-coordinate.
 /// Here, we pre-compute and store the coefficients of the interpolation polynomial.
 fn compute_lagrange_coeffs<C: CurveAffine>(base: C, num_windows: usize) -> Vec<[C::Base; H]> {
@@ -162,6 +180,7 @@ fn compute_lagrange_coeffs<C: CurveAffine>(base: C, num_windows: usize) -> Vec<[
         .collect()
 }
 
+#[cfg(feature = "std")]
 /// For each window, $z$ is a field element such that for each point $(x, y)$ in the window:
 /// - $z + y = u^2$ (some square in the field); and
 /// - $z - y$ is not a square.
@@ -201,7 +220,7 @@ fn find_zs_and_us<C: CurveAffine>(base: C, num_windows: usize) -> Option<Vec<(u6
         .collect()
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "std"))]
 // Test that Lagrange interpolation coefficients reproduce the correct x-coordinate
 // for each fixed-base multiple in each window.
 fn test_lagrange_coeffs<C: CurveAffine>(base: C, num_windows: usize) {
@@ -253,7 +272,7 @@ fn test_lagrange_coeffs<C: CurveAffine>(base: C, num_windows: usize) {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "std"))]
 // Test that the z-values and u-values satisfy the conditions:
 //      1. z + y = u^2,
 //      2. z - y is not a square

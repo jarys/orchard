@@ -1,7 +1,12 @@
 //! Logic for building Orchard components of transactions.
 
+extern crate std; // this module is std only
+
 use std::convert::TryFrom;
 use std::iter;
+use std::vec::Vec;
+#[macro_use]
+use std::vec;
 
 use ff::Field;
 use group::GroupEncoding;
@@ -569,6 +574,7 @@ impl<V> Bundle<InProgress<Proof, PartiallyAuthorized>, V> {
 /// Generators for property testing.
 #[cfg(any(test, feature = "test-dependencies"))]
 pub mod testing {
+    use super::{std, Vec};
     use incrementalmerkletree::{bridgetree::BridgeTree, Frontier, Tree};
 
     use rand::{rngs::StdRng, CryptoRng, SeedableRng};

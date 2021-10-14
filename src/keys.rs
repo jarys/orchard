@@ -1,8 +1,12 @@
 //! Key structures for Orchard.
 
-use std::convert::{TryFrom, TryInto};
+#[cfg(feature = "std")]
+extern crate std;
+
+use core::convert::{TryFrom, TryInto};
+use core::mem;
+#[cfg(feature = "std")]
 use std::io::{self, Read, Write};
-use std::mem;
 
 use aes::Aes256;
 use blake2b_simd::{Hash as Blake2bHash, Params};
@@ -343,6 +347,7 @@ impl FullViewingKey {
     /// Serializes the full viewing key as specified in [Zcash Protocol Spec § 5.6.4.4: Orchard Raw Full Viewing Keys][orchardrawfullviewingkeys]
     ///
     /// [orchardrawfullviewingkeys]: https://zips.z.cash/protocol/protocol.pdf#orchardfullviewingkeyencoding
+    #[cfg(feature = "std")] // TODO: usage of write
     pub fn write<W: Write>(&self, mut writer: W) -> io::Result<()> {
         let ak_raw: [u8; 32] = self.ak.0.clone().into();
         writer.write_all(&ak_raw)?;
@@ -355,6 +360,7 @@ impl FullViewingKey {
     /// Parses a full viewing key from its "raw" encoding as specified in [Zcash Protocol Spec § 5.6.4.4: Orchard Raw Full Viewing Keys][orchardrawfullviewingkeys]
     ///
     /// [orchardrawfullviewingkeys]: https://zips.z.cash/protocol/protocol.pdf#orchardfullviewingkeyencoding
+    #[cfg(feature = "std")] // TODO: usage of read
     pub fn read<R: Read>(mut reader: R) -> io::Result<Self> {
         let mut data = [0u8; 96];
         reader.read_exact(&mut data)?;
@@ -725,6 +731,13 @@ impl EphemeralPublicKey {
 #[derive(Debug)]
 pub struct SharedSecret(NonIdentityPallasPoint);
 
+#[cfg(feature = "std")]
+use std::vec::Vec;
+#[cfg(feature = "std")]
+#[macro_use]
+use std::vec;
+
+#[cfg(feature = "std")] // TODO: usage of SharedSecret
 impl SharedSecret {
     /// For checking test vectors only.
     #[cfg(test)]

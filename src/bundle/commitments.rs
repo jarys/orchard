@@ -1,6 +1,10 @@
 //! Utility functions for computing bundle commitments
 
+// TODO: make online version of hash_bundle_txid_data
 use blake2b_simd::{Hash as Blake2bHash, Params, State};
+#[cfg(feature = "std")]
+extern crate std;
+#[cfg(feature = "std")]
 use std::io::Write;
 
 use crate::bundle::{Authorization, Authorized, Bundle};
@@ -15,6 +19,7 @@ fn hasher(personal: &[u8; 16]) -> State {
     Params::new().hash_length(32).personal(personal).to_state()
 }
 
+#[cfg(feature = "std")]
 /// Write disjoint parts of each Orchard shielded action as 3 separate hashes:
 /// * \[(nullifier, cmx, ephemeral_key, enc_ciphertext\[..52\])*\] personalized
 ///   with ZCASH_ORCHARD_ACTIONS_COMPACT_HASH_PERSONALIZATION
@@ -73,6 +78,7 @@ pub fn hash_bundle_txid_empty() -> Blake2bHash {
     hasher(ZCASH_ORCHARD_HASH_PERSONALIZATION).finalize()
 }
 
+#[cfg(feature = "std")]
 /// Construct the commitment to the authorizing data of an
 /// authorized bundle as defined in [ZIP-244: Transaction
 /// Identifier Non-Malleability][zip244]

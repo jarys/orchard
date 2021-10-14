@@ -1,3 +1,8 @@
+extern crate std; // this module is std only
+use std::vec::Vec;
+#[macro_use]
+use std::vec;
+
 pub(crate) struct TestVector {
     pub(crate) leaves: [[u8; 32]; 16],
     pub(crate) paths: [[[u8; 32]; 4]; 16],

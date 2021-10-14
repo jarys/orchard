@@ -1,5 +1,16 @@
 //! Test vectors for Orchard key components.
 
+// TODO: make these test no_std
+
+#[cfg(feature = "std")]
+extern crate std;
+#[cfg(feature = "std")]
+use std::vec::Vec;
+#[cfg(feature = "std")]
+#[macro_use]
+use std::vec;
+
+#[cfg(feature = "std")]
 pub(crate) struct TestVector {
     pub(crate) incoming_viewing_key: [u8; 64],
     pub(crate) ovk: [u8; 32],
@@ -22,6 +33,7 @@ pub(crate) struct TestVector {
     pub(crate) c_out: [u8; 80],
 }
 
+#[cfg(feature = "std")]
 pub(crate) fn test_vectors() -> Vec<TestVector> {
     // From https://github.com/zcash-hackworks/zcash-test-vectors/blob/master/orchard_note_encryption.py
     vec![

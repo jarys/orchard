@@ -1,4 +1,7 @@
+extern crate std; // this module is std only
+use std::boxed::Box;
 use std::convert::TryInto;
+use std::vec::Vec;
 
 use crate::constants::{self, compute_lagrange_coeffs, H, NUM_WINDOWS, NUM_WINDOWS_SHORT};
 use pasta_curves::{arithmetic::FieldExt, pallas};

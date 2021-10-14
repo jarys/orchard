@@ -1,5 +1,8 @@
 //! Types related to Orchard note commitment trees and anchors.
 
+extern crate std; // this module is std only
+use std::vec::Vec;
+
 use crate::{
     constants::{
         util::gen_const_array_with_default, L_ORCHARD_MERKLE, MERKLE_CRH_PERSONALIZATION,
@@ -266,6 +269,8 @@ impl<'de> Deserialize<'de> for MerkleHashOrchard {
 /// Generators for property testing.
 #[cfg(any(test, feature = "test-dependencies"))]
 pub mod testing {
+    extern crate std; // this module is std only
+
     #[cfg(test)]
     use incrementalmerkletree::{
         bridgetree::{BridgeTree, Frontier as BridgeFrontier},

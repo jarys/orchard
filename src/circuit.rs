@@ -1,5 +1,12 @@
 //! The Orchard Action circuit implementation.
 
+extern crate std; // this module is std only
+use std::vec::Vec;
+#[macro_use]
+use std::vec;
+#[macro_use]
+use std::format;
+
 use group::{Curve, GroupEncoding};
 use halo2::{
     circuit::{floor_planner, Layouter},
@@ -910,6 +917,8 @@ impl Proof {
 
 #[cfg(test)]
 mod tests {
+    use super::{format, std, Vec};
+
     use ff::Field;
     use group::GroupEncoding;
     use halo2::dev::MockProver;

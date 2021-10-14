@@ -1,3 +1,6 @@
+extern crate std; // this module is std only
+use std::vec::Vec;
+
 use ff::{Field, PrimeFieldBits};
 use halo2::arithmetic::{CurveAffine, FieldExt};
 
@@ -63,7 +66,7 @@ pub(crate) fn gen_const_array_with_default<Output: Copy, const LEN: usize>(
 
 #[cfg(test)]
 mod tests {
-    use super::decompose_word;
+    use super::{decompose_word, std, Vec};
     use ff::PrimeField;
     use pasta_curves::{arithmetic::FieldExt, pallas};
     use proptest::prelude::*;

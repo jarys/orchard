@@ -1,6 +1,9 @@
 //! In-band secret distribution for Orchard bundles.
 
-use std::{convert::TryInto, fmt};
+#[cfg(feature = "std")]
+extern crate std; // for Vec in Domain::batch_kdf
+
+use core::{convert::TryInto, fmt};
 
 use blake2b_simd::{Hash, Params};
 use halo2::arithmetic::FieldExt;
@@ -141,10 +144,11 @@ impl Domain for OrchardDomain {
         secret.kdf_orchard(ephemeral_key)
     }
 
+    #[cfg(feature = "std")]
     fn batch_kdf<'a>(
         items: impl Iterator<Item = (Option<Self::SharedSecret>, &'a EphemeralKeyBytes)>,
-    ) -> Vec<Option<Self::SymmetricKey>> {
-        let (shared_secrets, ephemeral_keys): (Vec<_>, Vec<_>) = items.unzip();
+    ) -> std::vec::Vec<Option<Self::SymmetricKey>> {
+        let (shared_secrets, ephemeral_keys): (std::vec::Vec<_>, std::vec::Vec<_>) = items.unzip();
 
         SharedSecret::batch_to_affine(shared_secrets)
             .zip(ephemeral_keys.into_iter())

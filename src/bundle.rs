@@ -1,8 +1,12 @@
 //! Structs related to bundles of Orchard actions.
 
 pub mod commitments;
-
+#[cfg(feature = "std")]
+extern crate std;
+#[cfg(feature = "std")]
 use std::io;
+#[cfg(feature = "std")]
+use std::vec::Vec;
 
 use blake2b_simd::Hash as Blake2bHash;
 use memuse::DynamicUsage;
@@ -209,6 +213,7 @@ impl Flags {
         value
     }
 
+    #[cfg(feature = "std")] // not used in no_std
     /// Parse from a single byte as defined in [Zcash Protocol Spec § 7.1: Transaction
     /// Encoding And Consensus][txencoding].
     ///
@@ -235,6 +240,7 @@ pub trait Authorization {
 }
 
 /// A bundle of actions to be applied to the ledger.
+#[cfg(feature = "std")] // TODO: no_std design for Bundle
 #[derive(Debug, Clone)]
 pub struct Bundle<T: Authorization, V> {
     /// The list of actions that make up this bundle.
@@ -251,6 +257,7 @@ pub struct Bundle<T: Authorization, V> {
     authorization: T,
 }
 
+#[cfg(feature = "std")] // TODO: no_std design for Bundle
 impl<T: Authorization, V> Bundle<T, V> {
     /// Constructs a `Bundle` from its constituent parts.
     pub fn from_parts(
@@ -505,8 +512,9 @@ pub struct BundleCommitment(pub Blake2bHash);
 pub struct BundleAuthorizingCommitment(pub Blake2bHash);
 
 /// Generators for property testing.
-#[cfg(any(test, feature = "test-dependencies"))]
+#[cfg(all(any(test, feature = "test-dependencies"), feature = "std"))]
 pub mod testing {
+    use super::Vec;
     use nonempty::NonEmpty;
     use pasta_curves::{arithmetic::FieldExt, pallas};
     use rand::{rngs::StdRng, SeedableRng};

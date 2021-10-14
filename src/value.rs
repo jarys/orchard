@@ -14,10 +14,10 @@
 //! [`Action`]: crate::bundle::Action
 //! [`Bundle`]: crate::bundle::Bundle
 
-use std::convert::{TryFrom, TryInto};
-use std::fmt::{self, Debug};
-use std::iter::Sum;
-use std::ops::{Add, Sub};
+use core::convert::{TryFrom, TryInto};
+use core::fmt::{self, Debug};
+use core::iter::Sum;
+use core::ops::{Add, Sub};
 
 use bitvec::{array::BitArray, order::Lsb0};
 use ff::{Field, PrimeField};
@@ -36,7 +36,7 @@ use crate::{
     primitives::redpallas::{self, Binding},
 };
 
-use std::ops::RangeInclusive;
+use core::ops::RangeInclusive;
 
 /// Maximum note value.
 pub const MAX_NOTE_VALUE: u64 = u64::MAX;
@@ -59,6 +59,9 @@ impl fmt::Display for OverflowError {
     }
 }
 
+#[cfg(feature = "std")]
+extern crate std;
+#[cfg(feature = "std")]
 impl std::error::Error for OverflowError {}
 
 /// The non-negative value of an individual Orchard note.

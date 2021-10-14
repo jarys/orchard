@@ -19,25 +19,27 @@ publish = false
 rustdoc-args = [ "--html-in-header", "katex-header.html" ]
 
 [dependencies]
-aes = "0.7"
-arrayvec = "0.7.0"
-bigint = "4"
-bitvec = "0.22"
-blake2b_simd = "0.5"
-ff = "0.11"
-fpe = "0.5"
-group = "0.11"
-halo2 = "=0.1.0-beta.1"
-lazy_static = "1"
-memuse = { version = "0.2", features = ["nonempty"] }
-pasta_curves = "0.2.1"
+aes = {version = "0.7", default-features = false }
+arrayvec = { version = "0.7.0", default-features = false }
+bigint = { version = "4", default-features = false }
+bitvec = { version = "0.22", default-features = false }
+blake2b_simd = { version = "0.5", default-features = false }
+ff = { version = "0.11", default-features = false }
+fpe = { version = "0.5", default-features = false }
+group = { version = "0.11", default-features = false }
+halo2 = { version = "=0.1.0-beta.1", optional = true}
+lazy_static = { version = "1", optional = true }
+memuse = { version = "0.2", features = ["nonempty"], optional = true }
+# TODO: waiting for no_std + alloc version of pasta_curves from @str4d
+pasta_curves = { git = "https://github.com/jarys/pasta_curves.git", branch="no-std" }
 proptest = { version = "1.0.0", optional = true }
-rand = "0.8"
-nonempty = "0.7"
+rand = { version = "0.8", default-features = false }
+nonempty = { version = "0.7", optional = true }
 serde = { version = "1.0", features = ["derive"] }
-subtle = "2.3"
-zcash_note_encryption = { path = "/home/agi/code/librustzcash/components/zcash_note_encryption" }
-incrementalmerkletree = "0.1"
+subtle = { version = "2.3", default-features = false }
+# TODO: zcash_note_encryption is not no_std
+zcash_note_encryption = { path = "/home/agi/code/librustzcash/components/zcash_note_encryption", optional = true }
+incrementalmerkletree = { version = "0.1", optional = true }
 
 # Developer tooling dependencies
 plotters = { version = "0.3.0", optional = true }
@@ -58,8 +60,16 @@ pprof = { version = "0.5", features = ["criterion", "flamegraph"] }
 bench = false
 
 [features]
+default = ["std"]
 dev-graph = ["halo2/dev-graph", "plotters"]
 test-dependencies = ["proptest"]
+std = ["arrayvec/std", "bigint/std", "bitvec/std",
+       "blake2b_simd/std", "ff/bits", "ff/std",
+       "fpe/alloc", "group/alloc", "halo2",
+       "lazy_static", "memuse", "rand/std",
+       "rand/std_rng", "nonempty", "subtle/std",
+       "subtle/i128", "zcash_note_encryption",
+       "incrementalmerkletree"]
 
 [[bench]]
 name = "note_decryption"

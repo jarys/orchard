@@ -61,7 +61,10 @@ impl fmt::Display for OverflowError {
     }
 }
 
-impl std::error::Error for OverflowError {}
+#[cfg(feature = "std")]
+extern crate std as real_std;
+#[cfg(feature = "std")]
+impl real_std::error::Error for OverflowError {}
 
 /// The non-negative value of an individual Orchard note.
 #[derive(Clone, Copy, Debug, Default)]

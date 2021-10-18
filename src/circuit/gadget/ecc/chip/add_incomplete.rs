@@ -1,6 +1,11 @@
 use std::prelude::v1::*;
 
-use std::{array, collections::HashSet};
+use std::array;
+
+#[cfg(feature = "std")]
+extern crate std as real_std;
+#[cfg(feature = "std")]
+use real_std::collections::HashSet;
 
 use super::{copy, CellValue, EccConfig, NonIdentityEccPoint, Var};
 use group::Curve;

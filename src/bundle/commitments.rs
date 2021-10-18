@@ -3,7 +3,11 @@
 use std::prelude::v1::*;
 
 use blake2b_simd::{Hash as Blake2bHash, Params, State};
-use std::io::Write;
+
+#[cfg(feature = "std")]
+extern crate std as real_std;
+#[cfg(feature = "std")]
+use real_std::io::Write;
 
 use crate::bundle::{Authorization, Authorized, Bundle};
 

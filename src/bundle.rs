@@ -5,7 +5,9 @@ pub mod commitments;
 use std::prelude::v1::*;
 
 #[cfg(feature = "std")]
-use std::io;
+extern crate std as real_std;
+#[cfg(feature = "std")]
+use real_std::io;
 
 use blake2b_simd::Hash as Blake2bHash;
 use memuse::DynamicUsage;

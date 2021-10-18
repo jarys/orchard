@@ -11,7 +11,11 @@ use halo2::{
     poly::Rotation,
 };
 use pasta_curves::{arithmetic::FieldExt, pallas};
-use std::collections::HashSet;
+
+#[cfg(feature = "std")]
+extern crate std as real_std;
+#[cfg(feature = "std")]
+use real_std::collections::HashSet;
 
 #[derive(Clone, Debug)]
 pub struct Config {

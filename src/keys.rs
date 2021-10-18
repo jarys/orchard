@@ -3,8 +3,12 @@
 use std::prelude::v1::*;
 
 use std::convert::{TryFrom, TryInto};
-use std::io::{self, Read, Write};
 use std::mem;
+
+#[cfg(feature = "std")]
+extern crate std as real_std;
+#[cfg(feature = "std")]
+use real_std::io::{self, Read, Write};
 
 use aes::Aes256;
 use blake2b_simd::{Hash as Blake2bHash, Params};

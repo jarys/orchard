@@ -8,6 +8,8 @@ use pasta_curves::{
     pallas,
 };
 
+// TODO: enable under std feature
+/*
 pub mod commit_ivk_r;
 pub mod note_commit_r;
 pub mod nullifier_k;
@@ -15,10 +17,11 @@ pub mod spend_auth_g;
 pub mod value_commit_r;
 pub mod value_commit_v;
 
-pub mod load;
+pub mod load; */
 pub mod util;
 
-pub use load::{NullifierK, OrchardFixedBase, OrchardFixedBasesFull, ValueCommitV};
+// TODO: enable under std feature
+//pub use load::{NullifierK, OrchardFixedBase, OrchardFixedBasesFull, ValueCommitV};
 
 /// The Pallas scalar field modulus is $q = 2^{254} + \mathsf{t_q}$.
 /// <https://github.com/zcash/pasta>
@@ -72,6 +75,9 @@ pub const COMMIT_IVK_PERSONALIZATION: &str = "z.cash:Orchard-CommitIvk";
 
 /// SWU hash-to-curve personalization for the Merkle CRH generator
 pub const MERKLE_CRH_PERSONALIZATION: &str = "z.cash:Orchard-MerkleCRH";
+
+// TODO: enable under std feature
+/*
 
 /// Window size for fixed-base scalar multiplication
 pub const FIXED_BASE_WINDOW_SIZE: usize = 3;
@@ -308,3 +314,5 @@ mod tests {
         assert_eq!(t_p + two_pow_254, pallas::Base::zero());
     }
 }
+
+*/

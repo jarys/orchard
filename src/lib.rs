@@ -17,16 +17,16 @@
 #![deny(unsafe_code)]
 
 mod address;
-pub mod builder;
-pub mod bundle;
-pub mod circuit;
+//pub mod builder; // TODO: enable builder under std feature
+//pub mod bundle;  // TODO: enable bundle
+//pub mod circuit; // TODO: enable circuit under std feature
 mod constants;
 pub mod keys;
 pub mod note;
-pub mod note_encryption;
+//pub mod note_encryption; // TODO: enable note_encryption
 pub mod primitives;
 mod spec;
-pub mod tree;
+//pub mod tree; // TODO: enable tree under std feature
 pub mod value;
 pub mod zip32;
 
@@ -34,7 +34,7 @@ pub mod zip32;
 mod test_vectors;
 
 pub use address::Address;
-pub use bundle::Bundle;
-pub use circuit::Proof;
+//pub use bundle::Bundle; // TODO: enable bundle
+//pub use circuit::Proof; // TODO: enable circuit under std feature
 pub use note::Note;
-pub use tree::Anchor;
+//pub use tree::Anchor; // TODO: enable tree under std feature

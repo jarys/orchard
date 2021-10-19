@@ -1,6 +1,8 @@
 use ff::{Field, PrimeFieldBits};
 use halo2::arithmetic::{CurveAffine, FieldExt};
 
+// TODO: enable under std feature
+/*
 /// Decompose a word `alpha` into `window_num_bits` bits (little-endian)
 /// For a window size of `w`, this returns [k_0, ..., k_n] where each `k_i`
 /// is a `w`-bit value, and `scalar = k_0 + k_1 * w + k_n * w^n`.
@@ -41,6 +43,7 @@ pub fn evaluate<C: CurveAffine>(x: u8, coeffs: &[C::Base]) -> C::Base {
         .reduce(|acc, coeff| acc * x + coeff)
         .unwrap_or_else(C::Base::zero)
 }
+*/
 
 /// Takes in an FnMut closure and returns a constant-length array with elements of
 /// type `Output`.
@@ -61,6 +64,8 @@ pub(crate) fn gen_const_array_with_default<Output: Copy, const LEN: usize>(
     ret
 }
 
+// TODO: enable under std feature
+/*
 #[cfg(test)]
 mod tests {
     use super::decompose_word;
@@ -106,3 +111,4 @@ mod tests {
         }
     }
 }
+*/

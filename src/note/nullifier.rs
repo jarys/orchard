@@ -1,5 +1,5 @@
 use group::Group;
-use halo2::arithmetic::CurveExt;
+use pasta_curves::arithmetic::CurveExt;
 use pasta_curves::{arithmetic::FieldExt, pallas};
 use rand::RngCore;
 use subtle::CtOption;

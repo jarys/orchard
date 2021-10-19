@@ -1,4 +1,4 @@
-use halo2::arithmetic::FieldExt;
+use pasta_curves::arithmetic::FieldExt;
 
 use super::{grain::Grain, Mds};
 

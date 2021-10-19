@@ -67,8 +67,8 @@ mod tests {
         COMMIT_IVK_PERSONALIZATION, MERKLE_CRH_PERSONALIZATION, NOTE_COMMITMENT_PERSONALIZATION,
     };
     use group::Curve;
-    use halo2::arithmetic::{CurveAffine, CurveExt, FieldExt};
-    use halo2::pasta::pallas;
+    use pasta_curves::arithmetic::{CurveAffine, CurveExt, FieldExt};
+    use pasta_curves::pallas;
 
     #[test]
     fn sinsemilla_s() {

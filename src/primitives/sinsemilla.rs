@@ -1,7 +1,7 @@
 //! The Sinsemilla hash function and commitment scheme.
 
 use group::Wnaf;
-use halo2::arithmetic::{CurveAffine, CurveExt};
+use pasta_curves::arithmetic::{CurveAffine, CurveExt};
 use pasta_curves::pallas;
 use subtle::CtOption;
 

@@ -8,7 +8,7 @@ use aes::Aes256;
 use blake2b_simd::{Hash as Blake2bHash, Params};
 use fpe::ff1::{BinaryNumeralString, FF1};
 use group::{ff::Field, prime::PrimeCurveAffine, Curve, GroupEncoding};
-use halo2::arithmetic::FieldExt;
+use pasta_curves::arithmetic::FieldExt;
 use pasta_curves::pallas;
 use rand::RngCore;
 use subtle::{Choice, ConditionallySelectable, ConstantTimeEq, CtOption};

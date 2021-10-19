@@ -6,7 +6,7 @@ use std::ops::Deref;
 use ff::{Field, PrimeField, PrimeFieldBits};
 use group::GroupEncoding;
 use group::{Curve, Group};
-use halo2::arithmetic::{CurveAffine, CurveExt, FieldExt};
+use pasta_curves::arithmetic::{CurveAffine, CurveExt, FieldExt};
 use pasta_curves::pallas;
 use subtle::{ConditionallySelectable, CtOption};
 
@@ -282,7 +282,7 @@ mod tests {
     use super::{i2lebsp, lebs2ip};
 
     use group::Group;
-    use halo2::arithmetic::CurveExt;
+    use pasta_curves::arithmetic::CurveExt;
     use pasta_curves::pallas;
     use rand::{rngs::OsRng, RngCore};
     use std::convert::TryInto;

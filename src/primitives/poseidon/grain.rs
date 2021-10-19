@@ -3,7 +3,7 @@
 use std::marker::PhantomData;
 
 use bitvec::prelude::*;
-use halo2::arithmetic::FieldExt;
+use pasta_curves::arithmetic::FieldExt;
 
 const STATE: usize = 80;
 

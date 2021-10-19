@@ -1,5 +1,5 @@
 use ff::{Field, PrimeFieldBits};
-use halo2::arithmetic::{CurveAffine, FieldExt};
+//use halo2::arithmetic::{CurveAffine, FieldExt};
 
 // TODO: enable under std feature
 /*

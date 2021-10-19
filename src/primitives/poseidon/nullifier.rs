@@ -1,4 +1,4 @@
-use halo2::arithmetic::Field;
+use ff::Field;
 use pasta_curves::pallas;
 
 use super::{Mds, Spec};
@@ -1468,7 +1468,7 @@ mod tests {
     use std::marker::PhantomData;
 
     use ff::PrimeField;
-    use halo2::arithmetic::FieldExt;
+    use pasta_curves::arithmetic::FieldExt;
     use pasta_curves::pallas;
 
     use crate::primitives::poseidon::{permute, ConstantLength, Hash, Spec};

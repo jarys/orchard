@@ -5,7 +5,7 @@ use std::fmt;
 use std::iter;
 use std::marker::PhantomData;
 
-use halo2::arithmetic::FieldExt;
+use pasta_curves::arithmetic::FieldExt;
 
 pub(crate) mod grain;
 pub(crate) mod mds;
@@ -360,7 +360,7 @@ impl<F: FieldExt, S: Spec<F, T, RATE>, const T: usize, const RATE: usize, const 
 
 #[cfg(test)]
 mod tests {
-    use halo2::arithmetic::FieldExt;
+    use pasta_curves::arithmetic::FieldExt;
     use pasta_curves::pallas;
 
     use super::{permute, ConstantLength, Hash, OrchardNullifier, Spec};

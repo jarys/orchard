@@ -1,7 +1,7 @@
 use std::iter;
 
 use bitvec::{array::BitArray, order::Lsb0};
-use ff::PrimeFieldBits;
+use ff::{PrimeField, PrimeFieldBits};
 use pasta_curves::{arithmetic::FieldExt, pallas};
 use subtle::{ConstantTimeEq, CtOption};
 
@@ -72,12 +72,12 @@ impl ExtractedNoteCommitment {
     ///
     /// [cmxcanon]: https://zips.z.cash/protocol/protocol.pdf#actionencodingandconsensus
     pub fn from_bytes(bytes: &[u8; 32]) -> CtOption<Self> {
-        pallas::Base::from_bytes(bytes).map(ExtractedNoteCommitment)
+        pallas::Base::from_repr(*bytes).map(ExtractedNoteCommitment)
     }
 
     /// Serialize the value commitment to its canonical byte representation.
     pub fn to_bytes(self) -> [u8; 32] {
-        self.0.to_bytes()
+        self.0.to_repr()
     }
 }
 

@@ -30,7 +30,8 @@ group = { version = "0.11", default-features = false }
 memuse = { version = "0.2", features = ["nonempty"], optional = true }
 # TODO: waiting for no_std + alloc version of pasta_curves from @str4d
 #pasta_curves = "0.2.1"
-pasta_curves = { git = "https://github.com/jarys/pasta_curves.git", branch="no-std" }
+#pasta_curves = { git = "https://github.com/jarys/pasta_curves.git", branch="alloc" }
+pasta_curves = { path = "/home/agi/code/pasta_curves" }
 rand = { version = "0.8", default-features = false }
 nonempty = { version = "0.7", optional = true }
 serde = { version = "1.0", features = ["derive"] }
@@ -67,7 +68,8 @@ bench = false
 
 [features]
 default = ["std"]
-alloc = ["fpe/alloc", "group/alloc", "lazy_static"]
+alloc = ["fpe/alloc", "group/alloc", "lazy_static",
+         "pasta_curves/alloc"]
 # TODO: do we really need all default features ?
 std = ["arrayvec/std", "bigint/std", "bitvec/std",
        "blake2b_simd/std", "ff/bits", "ff/std",

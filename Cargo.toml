@@ -33,6 +33,7 @@ memuse = { version = "0.2", features = ["nonempty"], optional = true }
 pasta_curves = { git = "https://github.com/jarys/pasta_curves.git", branch="alloc" }
 #pasta_curves = { path = "/home/agi/code/pasta_curves" }
 rand = { version = "0.8", default-features = false }
+rand_core = { version = "0.5", default-features = false }
 nonempty = { version = "0.7", optional = true }
 serde = { version = "1.0", features = ["derive"] }
 subtle = { version = "2.3", default-features = false }
@@ -46,13 +47,14 @@ zcash_note_encryption = { version = "0.0", optional = true }
 incrementalmerkletree = { version = "0.1", optional = true }
 
 # test dependencies
-proptest = { version = "1.0.0", optional = true }
+proptest = { version = "1.0.0", optional = true } # TODO: remove duplicate
 
 # Developer tooling dependencies
 plotters = { version = "0.3.0", optional = true }
 
 # TODO: waiting for new version of reddsa
-reddsa = { git = "https://github.com/jarys/redjubjub.git", branch = "orchard-ff-0.11-pasta"}
+#reddsa = { git = "https://github.com/jarys/no_std_redpallas.git", branch = "main" }
+reddsa = { path = "/home/agi/code/no_std_redpallas" }
 #[dependencies.reddsa]
 #git = "https://github.com/str4d/redjubjub.git"
 #rev = "416a6a8ebf8bd42c114c938883016c04f338de72"

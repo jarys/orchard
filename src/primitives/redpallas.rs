@@ -4,9 +4,9 @@ use std::cmp::{Ord, Ordering, PartialOrd};
 use std::convert::{TryFrom, TryInto};
 
 use pasta_curves::pallas;
-use rand::{CryptoRng, RngCore};
+use rand_core::{CryptoRng, RngCore};
 
-pub use reddsa::batch;
+//pub use reddsa::batch;
 
 #[cfg(test)]
 use rand::rngs::OsRng;
@@ -113,11 +113,12 @@ impl<T: SigType> Ord for VerificationKey<T> {
 }
 
 impl VerificationKey<SpendAuth> {
+    /*
     /// Used in the note encryption tests.
     #[cfg(test)]
     pub(crate) fn dummy() -> Self {
         VerificationKey((&reddsa::SigningKey::new(OsRng)).into())
-    }
+    }*/
 
     /// Randomizes this verification key with the given `randomizer`.
     ///
@@ -125,7 +126,7 @@ impl VerificationKey<SpendAuth> {
     pub fn randomize(&self, randomizer: &pallas::Scalar) -> Self {
         VerificationKey(self.0.randomize(randomizer))
     }
-
+    /*
     /// Creates a batch validation item from a `SpendAuth` signature.
     pub fn create_batch_item<M: AsRef<[u8]>>(
         &self,
@@ -133,10 +134,11 @@ impl VerificationKey<SpendAuth> {
         msg: &M,
     ) -> batch::Item<SpendAuth, Binding> {
         batch::Item::from_spendauth(self.0.into(), sig.0, msg)
-    }
+    }*/
 }
 
 impl VerificationKey<Binding> {
+    /*
     /// Creates a batch validation item from a `Binding` signature.
     pub fn create_batch_item<M: AsRef<[u8]>>(
         &self,
@@ -144,7 +146,7 @@ impl VerificationKey<Binding> {
         msg: &M,
     ) -> batch::Item<SpendAuth, Binding> {
         batch::Item::from_binding(self.0.into(), sig.0, msg)
-    }
+    }*/
 }
 
 /// A RedPallas signature.

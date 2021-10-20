@@ -30,8 +30,8 @@ group = { version = "0.11", default-features = false }
 memuse = { version = "0.2", features = ["nonempty"], optional = true }
 # TODO: waiting for no_std + alloc version of pasta_curves from @str4d
 #pasta_curves = "0.2.1"
-#pasta_curves = { git = "https://github.com/jarys/pasta_curves.git", branch="alloc" }
-pasta_curves = { path = "/home/agi/code/pasta_curves" }
+pasta_curves = { git = "https://github.com/jarys/pasta_curves.git", branch="alloc" }
+#pasta_curves = { path = "/home/agi/code/pasta_curves" }
 rand = { version = "0.8", default-features = false }
 nonempty = { version = "0.7", optional = true }
 serde = { version = "1.0", features = ["derive"] }
@@ -51,9 +51,11 @@ proptest = { version = "1.0.0", optional = true }
 # Developer tooling dependencies
 plotters = { version = "0.3.0", optional = true }
 
-[dependencies.reddsa]
-git = "https://github.com/str4d/redjubjub.git"
-rev = "416a6a8ebf8bd42c114c938883016c04f338de72"
+# TODO: waiting for new version of reddsa
+reddsa = { git = "https://github.com/jarys/redjubjub.git", branch = "orchard-ff-0.11-pasta"}
+#[dependencies.reddsa]
+#git = "https://github.com/str4d/redjubjub.git"
+#rev = "416a6a8ebf8bd42c114c938883016c04f338de72"
 
 [dev-dependencies]
 criterion = "0.3"

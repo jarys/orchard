@@ -1,8 +1,15 @@
 //! Key structures for Orchard.
 
-use std::convert::{TryFrom, TryInto};
+use core::convert::{TryFrom, TryInto};
+use core::mem;
+
+#[cfg(feature = "alloc")]
+use alloc::vec::Vec;
+
+#[cfg(feature = "std")]
+use std::borrow::ToOwned;
+#[cfg(feature = "std")]
 use std::io::{self, Read, Write};
-use std::mem;
 
 use aes::Aes256;
 use blake2b_simd::{Hash as Blake2bHash, Params};
@@ -351,6 +358,7 @@ impl FullViewingKey {
     /// Serializes the full viewing key as specified in [Zcash Protocol Spec § 5.6.4.4: Orchard Raw Full Viewing Keys][orchardrawfullviewingkeys]
     ///
     /// [orchardrawfullviewingkeys]: https://zips.z.cash/protocol/protocol.pdf#orchardfullviewingkeyencoding
+    #[cfg(feature = "std")]
     pub fn write<W: Write>(&self, mut writer: W) -> io::Result<()> {
         let ak_raw: [u8; 32] = self.ak.0.clone().into();
         writer.write_all(&ak_raw)?;
@@ -363,6 +371,7 @@ impl FullViewingKey {
     /// Parses a full viewing key from its "raw" encoding as specified in [Zcash Protocol Spec § 5.6.4.4: Orchard Raw Full Viewing Keys][orchardrawfullviewingkeys]
     ///
     /// [orchardrawfullviewingkeys]: https://zips.z.cash/protocol/protocol.pdf#orchardfullviewingkeyencoding
+    #[cfg(feature = "std")]
     pub fn read<R: Read>(mut reader: R) -> io::Result<Self> {
         let mut data = [0u8; 96];
         reader.read_exact(&mut data)?;
@@ -379,9 +388,20 @@ impl FullViewingKey {
     ///
     /// [orchardrawfullviewingkeys]: https://zips.z.cash/protocol/protocol.pdf#orchardfullviewingkeyencoding
     pub fn to_bytes(&self) -> [u8; 96] {
+        // TODO: unify
         let mut result = [0u8; 96];
-        self.write(&mut result[..])
-            .expect("should be able to serialize a FullViewingKey");
+        #[cfg(feature = "std")]
+        {
+            self.write(&mut result[..])
+                .expect("should be able to serialize a FullViewingKey");
+        }
+        #[cfg(not(feature = "std"))]
+        {
+            let ak_raw: [u8; 32] = self.ak.0.clone().into();
+            result[..32].copy_from_slice(&ak_raw);
+            result[32..64].copy_from_slice(&self.nk.0.to_repr());
+            result[64..].copy_from_slice(&self.rivk.0.to_repr())
+        }
         result
     }
 

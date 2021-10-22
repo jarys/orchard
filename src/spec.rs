@@ -1,7 +1,7 @@
 //! Helper functions defined in the Zcash Protocol Specification.
 
-use std::iter;
-use std::ops::Deref;
+use core::iter;
+use core::ops::Deref;
 
 use ff::{Field, PrimeField, PrimeFieldBits};
 use group::GroupEncoding;
@@ -281,11 +281,11 @@ pub fn i2lebsp<const NUM_BITS: usize>(int: u64) -> [bool; NUM_BITS] {
 mod tests {
     use super::{i2lebsp, lebs2ip};
 
+    use core::convert::TryInto;
     use group::Group;
     use pasta_curves::arithmetic::CurveExt;
     use pasta_curves::pallas;
     use rand::{rngs::OsRng, RngCore};
-    use std::convert::TryInto;
 
     #[test]
     fn diversify_hash_substitution() {
@@ -309,9 +309,11 @@ mod tests {
         );
     }
 
+    #[cfg(feature = "alloc")] // TODO: make this test no_std
     #[test]
     fn i2lebsp_round_trip() {
         {
+            use alloc::vec::Vec;
             let bitstring = (0..64).map(|_| rand::random()).collect::<Vec<_>>();
             assert_eq!(
                 i2lebsp::<64>(lebs2ip::<64>(&bitstring.clone().try_into().unwrap())).to_vec(),

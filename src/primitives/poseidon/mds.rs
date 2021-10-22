@@ -1,3 +1,5 @@
+use alloc::vec::Vec;
+
 use pasta_curves::arithmetic::FieldExt;
 
 use super::{grain::Grain, Mds};

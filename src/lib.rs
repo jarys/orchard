@@ -7,6 +7,7 @@
 //! implicitly mean it is an Orchard payment address (as opposed to e.g. a Sapling payment
 //! address, which is also shielded).
 
+#![no_std] // TODO: works only with alloc feature
 #![cfg_attr(docsrs, feature(doc_cfg))]
 // Temporary until we have more of the crate implemented.
 #![allow(dead_code)]
@@ -15,6 +16,14 @@
 #![deny(missing_debug_implementations)]
 #![deny(missing_docs)]
 #![deny(unsafe_code)]
+
+#[cfg(feature = "std")]
+#[macro_use]
+extern crate std;
+
+#[cfg(feature = "alloc")]
+#[macro_use]
+extern crate alloc;
 
 mod address;
 //pub mod builder; // TODO: enable builder under std feature

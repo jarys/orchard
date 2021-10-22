@@ -1,5 +1,7 @@
 //! The Sinsemilla hash function and commitment scheme.
 
+use alloc::vec::Vec;
+
 use group::Wnaf;
 use pasta_curves::arithmetic::{CurveAffine, CurveExt};
 use pasta_curves::pallas;
@@ -201,6 +203,9 @@ impl CommitDomain {
 #[cfg(test)]
 mod tests {
     use super::{i2lebsp_k, lebs2ip_k, Pad, K};
+    use alloc::vec::Vec;
+    #[macro_use]
+    use alloc::vec;
     use rand::{self, rngs::OsRng, Rng};
 
     #[test]

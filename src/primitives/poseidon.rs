@@ -1,9 +1,14 @@
 //! The Poseidon algebraic hash function.
 
-use std::array;
-use std::fmt;
-use std::iter;
-use std::marker::PhantomData;
+// this module is alloc only
+
+use core::array;
+use core::fmt;
+use core::iter;
+use core::marker::PhantomData;
+
+use alloc::boxed::Box;
+use alloc::vec::Vec;
 
 use pasta_curves::arithmetic::FieldExt;
 

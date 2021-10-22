@@ -62,11 +62,11 @@ impl Nullifier {
 /// Generators for property testing.
 #[cfg(any(test, feature = "test-dependencies"))]
 pub mod testing {
+    use core::convert::TryFrom;
     use group::Group;
     use pasta_curves::{arithmetic::FieldExt, pallas};
     use proptest::collection::vec;
     use proptest::prelude::*;
-    use std::convert::TryFrom;
 
     use super::Nullifier;
     use crate::spec::extract_p;

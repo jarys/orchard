@@ -1,12 +1,12 @@
 //! A minimal RedPallas implementation for use in Zcash.
 
-use std::cmp::{Ord, Ordering, PartialOrd};
-use std::convert::{TryFrom, TryInto};
+use core::cmp::{Ord, Ordering, PartialOrd};
+use core::convert::{TryFrom, TryInto};
 
 use pasta_curves::pallas;
 use rand_core::{CryptoRng, RngCore};
 
-//pub use reddsa::batch;
+//pub use reddsa::batch; // TODO: enable batching under std feature
 
 #[cfg(test)]
 use rand::rngs::OsRng;
@@ -178,7 +178,7 @@ pub(crate) mod private {
 /// Generators for property testing.
 #[cfg(any(test, feature = "test-dependencies"))]
 pub mod testing {
-    use std::convert::TryFrom;
+    use core::convert::TryFrom;
 
     use proptest::prelude::*;
 

@@ -1,6 +1,6 @@
 //! Key structures for Orchard.
 
-use std::{
+use core::{
     convert::{TryFrom, TryInto},
     fmt,
 };
@@ -30,7 +30,8 @@ impl fmt::Display for Error {
     }
 }
 
-//impl std::error::Error for Error {}
+#[cfg(feature = "std")]
+impl std::error::Error for Error {}
 
 /// An Orchard full viewing key fingerprint
 struct FvkFingerprint([u8; 32]);
@@ -101,7 +102,7 @@ pub(crate) struct ExtendedSpendingKey {
     sk: SpendingKey,
 }
 
-impl std::cmp::PartialEq for ExtendedSpendingKey {
+impl core::cmp::PartialEq for ExtendedSpendingKey {
     fn eq(&self, rhs: &ExtendedSpendingKey) -> bool {
         self.depth == rhs.depth
             && self.parent_fvk_tag == rhs.parent_fvk_tag

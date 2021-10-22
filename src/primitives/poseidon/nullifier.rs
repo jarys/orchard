@@ -1,3 +1,5 @@
+use alloc::vec::Vec;
+
 use ff::Field;
 use pasta_curves::pallas;
 
@@ -1465,7 +1467,7 @@ const MDS_INV: [[pallas::Base; 3]; 3] = [
 
 #[cfg(test)]
 mod tests {
-    use std::marker::PhantomData;
+    use core::marker::PhantomData;
 
     use ff::PrimeField;
     use pasta_curves::arithmetic::FieldExt;

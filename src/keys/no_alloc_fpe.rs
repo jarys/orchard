@@ -91,9 +91,6 @@ impl NumeralString for BinaryNumeralStringOfLength88 {
     }
 
     fn split(&self, u: usize) -> (Self, Self) {
-        if self.divided {
-            println!("panicked on split");
-        }
         assert_eq!(u, 44);
         assert!(!self.divided);
         let mut front: [u8; 88] = [0; 88];
@@ -113,9 +110,6 @@ impl NumeralString for BinaryNumeralStringOfLength88 {
     }
 
     fn concat(a: Self, b: Self) -> Self {
-        if !(a.divided & b.divided) {
-            println!("panicked on concat");
-        }
         assert!(a.divided & b.divided);
         let mut data: [u8; 88] = [0; 88];
         data[..44].copy_from_slice(&a.bits[44..]);

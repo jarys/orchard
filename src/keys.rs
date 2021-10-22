@@ -15,11 +15,11 @@ use aes::Aes256;
 use blake2b_simd::{Hash as Blake2bHash, Params};
 use ff::PrimeField;
 use fpe::ff1::FF1;
-#[cfg(not(feature = "alloc"))]
+//#[cfg(not(feature = "alloc"))]
 mod no_alloc_fpe;
-#[cfg(feature = "alloc")]
-use fpe::ff1::BinaryNumeralString;
-#[cfg(not(feature = "alloc"))]
+//#[cfg(feature = "alloc")]
+//use fpe::ff1::BinaryNumeralString;
+//#[cfg(not(feature = "alloc"))]
 use no_alloc_fpe::BinaryNumeralStringOfLength88 as BinaryNumeralString;
 
 use group::{ff::Field, prime::PrimeCurveAffine, Curve, GroupEncoding};

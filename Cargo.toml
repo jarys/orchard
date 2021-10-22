@@ -21,7 +21,6 @@ rustdoc-args = [ "--html-in-header", "katex-header.html" ]
 [dependencies]
 aes = {version = "0.7", default-features = false }
 arrayvec = { version = "0.7.0", default-features = false }
-bigint = { version = "4", default-features = false }
 bitvec = { version = "0.22", default-features = false }
 blake2b_simd = { version = "0.5", default-features = false }
 ff = { version = "0.11", default-features = false, features = ["bits"] }
@@ -30,7 +29,7 @@ group = { version = "0.11", default-features = false }
 memuse = { version = "0.2", features = ["nonempty"], optional = true }
 # TODO: waiting for no_std + alloc version of pasta_curves from @str4d
 #pasta_curves = "0.2.1"
-pasta_curves = { git = "https://github.com/jarys/pasta_curves.git", branch="alloc", default-features = false }
+pasta_curves = { git = "https://github.com/jarys/pasta_curves.git", branch="alloc", default-features = false, features = ["bits"] }
 #pasta_curves = { path = "/home/agi/code/pasta_curves" }
 # TODO: waiting for no-std support PR approval
 #zcash_note_encryption = { version = "0.0", default-features = false }
@@ -74,16 +73,16 @@ bench = false
 
 [features]
 default = ["std"]
-alloc = ["fpe/alloc", "group/alloc", "lazy_static",
+alloc = ["group/alloc", "lazy_static",
          "pasta_curves/alloc", "zcash_note_encryption/alloc"]
 # TODO: do we really need all default features ?
-std = ["arrayvec/std", "bigint/std", "bitvec/std",
+std = ["arrayvec/std", "bitvec/std",
        "blake2b_simd/std", "ff/bits", "ff/std",
        "halo2",
        "memuse", "rand/std",
        "rand/std_rng", "nonempty", "subtle/std",
        "subtle/i128",
-       "incrementalmerkletree", "alloc"]
+       "incrementalmerkletree", "alloc", "fpe/alloc"]
 dev-graph = ["halo2/dev-graph", "plotters"]
 test-dependencies = ["proptest"]
 

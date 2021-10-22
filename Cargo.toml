@@ -24,15 +24,17 @@ arrayvec = { version = "0.7.0", default-features = false }
 bigint = { version = "4", default-features = false }
 bitvec = { version = "0.22", default-features = false }
 blake2b_simd = { version = "0.5", default-features = false }
-ff = { version = "0.11", default-features = false }
+ff = { version = "0.11", default-features = false, features = ["bits"] }
 fpe = { version = "0.5", default-features = false }
 group = { version = "0.11", default-features = false }
 memuse = { version = "0.2", features = ["nonempty"], optional = true }
 # TODO: waiting for no_std + alloc version of pasta_curves from @str4d
 #pasta_curves = "0.2.1"
-pasta_curves = { git = "https://github.com/jarys/pasta_curves.git", branch="alloc" }
+pasta_curves = { git = "https://github.com/jarys/pasta_curves.git", branch="alloc", default-features = false }
 #pasta_curves = { path = "/home/agi/code/pasta_curves" }
-zcash_note_encryption = { version = "0.0", default-features = false }
+# TODO: waiting for no-std support PR approval
+#zcash_note_encryption = { version = "0.0", default-features = false }
+zcash_note_encryption = { git = "https://github.com/jarys/librustzcash.git", branch = "no-std-note-encryption", default-features = false }
 rand = { version = "0.8", default-features = false }
 rand_core = { version = "0.5", default-features = false }
 nonempty = { version = "0.7", optional = true }
@@ -109,5 +111,4 @@ debug = true
 
 [patch.crates-io]
 #zcash_note_encryption = { git = "https://github.com/zcash/librustzcash.git", rev = "13b023387bafdc7b5712c933dc0e16ee94b96a6a" }
-zcash_note_encryption = {git = "https://github.com/jarys/librustzcash.git", branch = "no-std-note-encryption"}
 incrementalmerkletree = { git = "https://github.com/zcash/incrementalmerkletree.git", rev = "b7bd6246122a6e9ace8edb51553fbf5228906cbb" }

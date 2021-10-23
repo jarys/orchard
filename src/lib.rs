@@ -27,15 +27,15 @@ extern crate alloc;
 
 mod address;
 //pub mod builder; // TODO: enable builder under std feature
-//pub mod bundle;  // TODO: enable bundle
-//pub mod circuit; // TODO: enable circuit under std feature
+pub mod bundle; // TODO: enable bundle
+                //pub mod circuit; // TODO: enable circuit under std feature
 mod constants;
 pub mod keys;
 pub mod note;
-//pub mod note_encryption; // TODO: enable note_encryption
+pub mod note_encryption; // TODO: enable note_encryption
 pub mod primitives;
 mod spec;
-//pub mod tree; // TODO: enable tree under std feature
+pub mod tree; // TODO: enable tree under std feature
 pub mod value;
 pub mod zip32;
 
@@ -43,7 +43,7 @@ pub mod zip32;
 mod test_vectors;
 
 pub use address::Address;
-//pub use bundle::Bundle; // TODO: enable bundle
-//pub use circuit::Proof; // TODO: enable circuit under std feature
+pub use bundle::Bundle; // TODO: enable bundle
+                        //pub use circuit::Proof; // TODO: enable circuit under std feature
 pub use note::Note;
 //pub use tree::Anchor; // TODO: enable tree under std feature

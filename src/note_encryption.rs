@@ -1,9 +1,13 @@
 //! In-band secret distribution for Orchard bundles.
 
-use std::{convert::TryInto, fmt};
+use core::{convert::TryInto, fmt};
+use ff::PrimeField;
+
+#[cfg(feature = "alloc")]
+use alloc::vec::Vec;
 
 use blake2b_simd::{Hash, Params};
-use halo2::arithmetic::FieldExt;
+use pasta_curves::arithmetic::FieldExt;
 use zcash_note_encryption::{
     Domain, EphemeralKeyBytes, NotePlaintextBytes, NoteValidity, OutPlaintextBytes,
     OutgoingCipherKey, ShieldedOutput, COMPACT_NOTE_SIZE, NOTE_PLAINTEXT_SIZE, OUT_PLAINTEXT_SIZE,
@@ -141,6 +145,7 @@ impl Domain for OrchardDomain {
         secret.kdf_orchard(ephemeral_key)
     }
 
+    #[cfg(feature = "alloc")]
     fn batch_kdf<'a>(
         items: impl Iterator<Item = (Option<Self::SharedSecret>, &'a EphemeralKeyBytes)>,
     ) -> Vec<Option<Self::SymmetricKey>> {
@@ -183,7 +188,7 @@ impl Domain for OrchardDomain {
     ) -> OutPlaintextBytes {
         let mut op = [0; OUT_PLAINTEXT_SIZE];
         op[..32].copy_from_slice(&note.recipient().pk_d().to_bytes());
-        op[32..].copy_from_slice(&esk.0.to_bytes());
+        op[32..].copy_from_slice(&esk.0.to_repr());
         OutPlaintextBytes(op)
     }
 
@@ -311,6 +316,7 @@ impl ShieldedOutput<OrchardDomain> for CompactAction {
     }
 }
 
+#[cfg(feature = "alloc")]
 #[cfg(test)]
 mod tests {
     use rand::rngs::OsRng;

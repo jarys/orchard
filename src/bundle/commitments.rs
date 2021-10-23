@@ -1,7 +1,7 @@
 //! Utility functions for computing bundle commitments
 
 use blake2b_simd::{Hash as Blake2bHash, Params, State};
-use std::io::Write;
+//use std::io::Write;
 
 //use crate::bundle::{Authorization, Authorized, Bundle};
 use crate::bundle::{Action, Authorization};

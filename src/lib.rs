@@ -43,7 +43,7 @@ pub mod zip32;
 mod test_vectors;
 
 pub use address::Address;
-pub use bundle::Bundle; // TODO: enable bundle
-                        //pub use circuit::Proof; // TODO: enable circuit under std feature
+//pub use bundle::Bundle; // TODO: enable bundle
+//pub use circuit::Proof; // TODO: enable circuit under std feature
 pub use note::Note;
-//pub use tree::Anchor; // TODO: enable tree under std feature
+pub use tree::Anchor; // TODO: enable tree under std feature

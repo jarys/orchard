@@ -8,16 +8,18 @@ use crate::{
     note::commitment::ExtractedNoteCommitment,
     primitives::sinsemilla::{i2lebsp_k, HashDomain},
 };
-use incrementalmerkletree::{Altitude, Hashable};
+//use incrementalmerkletree::{Altitude, Hashable};
 use pasta_curves::{arithmetic::FieldExt, pallas};
 
-use ff::{Field, PrimeField, PrimeFieldBits};
-use lazy_static::lazy_static;
-use rand::RngCore;
-use serde::de::{Deserializer, Error};
-use serde::ser::Serializer;
-use serde::{Deserialize, Serialize};
-use std::iter;
+//use ff::{Field, PrimeField, PrimeFieldBits};
+use ff::PrimeField;
+
+//use lazy_static::lazy_static;
+//use rand::RngCore;
+//use serde::de::{Deserializer, Error};
+//use serde::ser::Serializer;
+//use serde::{Deserialize, Serialize};
+//use std::iter;
 use subtle::{Choice, ConditionallySelectable, ConstantTimeEq, CtOption};
 
 /*

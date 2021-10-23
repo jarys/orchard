@@ -20,6 +20,7 @@ use serde::{Deserialize, Serialize};
 use std::iter;
 use subtle::{Choice, ConditionallySelectable, ConstantTimeEq, CtOption};
 
+/*
 // The uncommitted leaf is defined as pallas::Base(2).
 // <https://zips.z.cash/protocol/protocol.pdf#thmuncommittedorchard>
 lazy_static! {
@@ -37,6 +38,7 @@ lazy_static! {
             .collect()
     };
 }
+*/
 
 /// The root of an Orchard commitment tree.
 #[derive(Eq, PartialEq, Clone, Copy, Debug)]
@@ -47,12 +49,13 @@ impl From<pallas::Base> for Anchor {
         Anchor(anchor_field)
     }
 }
-
+/*
 impl From<MerkleHashOrchard> for Anchor {
     fn from(anchor: MerkleHashOrchard) -> Anchor {
         Anchor(anchor.0)
     }
 }
+*/
 
 impl Anchor {
     pub(crate) fn inner(&self) -> pallas::Base {
@@ -72,6 +75,7 @@ impl Anchor {
     }
 }
 
+/*
 /// The Merkle path from a leaf of the note commitment tree
 /// to its anchor.
 #[derive(Debug)]
@@ -387,3 +391,4 @@ pub mod testing {
         );
     }
 }
+*/

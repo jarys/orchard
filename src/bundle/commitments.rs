@@ -3,7 +3,9 @@
 use blake2b_simd::{Hash as Blake2bHash, Params, State};
 use std::io::Write;
 
-use crate::bundle::{Authorization, Authorized, Bundle};
+//use crate::bundle::{Authorization, Authorized, Bundle};
+use crate::bundle::{Action, Authorization};
+use crate::tree::Anchor;
 
 const ZCASH_ORCHARD_HASH_PERSONALIZATION: &[u8; 16] = b"ZTxIdOrchardHash";
 const ZCASH_ORCHARD_ACTIONS_COMPACT_HASH_PERSONALIZATION: &[u8; 16] = b"ZTxIdOrcActCHash";
@@ -15,6 +17,8 @@ fn hasher(personal: &[u8; 16]) -> State {
     Params::new().hash_length(32).personal(personal).to_state()
 }
 
+// TODO: enable in std
+/*
 /// Write disjoint parts of each Orchard shielded action as 3 separate hashes:
 /// * \[(nullifier, cmx, ephemeral_key, enc_ciphertext\[..52\])*\] personalized
 ///   with ZCASH_ORCHARD_ACTIONS_COMPACT_HASH_PERSONALIZATION
@@ -64,6 +68,7 @@ where
     h.write_all(&bundle.anchor().to_bytes()).unwrap();
     h.finalize()
 }
+*/
 
 /// Construct the commitment for the absent bundle as defined in
 /// [ZIP-244: Transaction Identifier Non-Malleability][zip244]
@@ -73,6 +78,8 @@ pub fn hash_bundle_txid_empty() -> Blake2bHash {
     hasher(ZCASH_ORCHARD_HASH_PERSONALIZATION).finalize()
 }
 
+// TODO: enable in std
+/*
 /// Construct the commitment to the authorizing data of an
 /// authorized bundle as defined in [ZIP-244: Transaction
 /// Identifier Non-Malleability][zip244]
@@ -100,3 +107,4 @@ pub fn hash_bundle_auth_data<V>(bundle: &Bundle<Authorized, V>) -> Blake2bHash {
 pub fn hash_bundle_auth_empty() -> Blake2bHash {
     hasher(ZCASH_ORCHARD_SIGS_HASH_PERSONALIZATION).finalize()
 }
+*/

@@ -2,20 +2,21 @@
 
 pub mod commitments;
 
-use std::io;
+//use std::io;
 
-use blake2b_simd::Hash as Blake2bHash;
+//use blake2b_simd::Hash as Blake2bHash;
+#[cfg(feature = "std")]
 use memuse::DynamicUsage;
-use nonempty::NonEmpty;
-use zcash_note_encryption::try_note_decryption;
+//use nonempty::NonEmpty;
+//use zcash_note_encryption::try_note_decryption;
 
 use crate::{
-    address::Address,
-    bundle::commitments::{hash_bundle_auth_data, hash_bundle_txid_data},
-    circuit::{Instance, Proof, VerifyingKey},
-    keys::IncomingViewingKey,
+    //address::Address,
+    // bundle::commitments::{hash_bundle_auth_data, hash_bundle_txid_data},
+    // circuit::{Instance, Proof, VerifyingKey},
+    //keys::IncomingViewingKey,
     note::{ExtractedNoteCommitment, Note, Nullifier, TransmittedNoteCiphertext},
-    note_encryption::OrchardDomain,
+    //note_encryption::OrchardDomain,
     primitives::redpallas::{self, Binding, SpendAuth},
     tree::Anchor,
     value::{ValueCommitTrapdoor, ValueCommitment, ValueSum},
@@ -119,6 +120,8 @@ impl<T> Action<T> {
         })
     }
 
+    // TODO: enable in std
+    /*
     /// Prepares the public instance for this action, for creating and verifying the
     /// bundle proof.
     pub fn to_instance(&self, flags: Flags, anchor: Anchor) -> Instance {
@@ -132,8 +135,10 @@ impl<T> Action<T> {
             enable_output: flags.outputs_enabled,
         }
     }
+    */
 }
 
+#[cfg(feature = "std")]
 impl DynamicUsage for Action<redpallas::Signature<SpendAuth>> {
     #[inline(always)]
     fn dynamic_usage(&self) -> usize {
@@ -167,6 +172,8 @@ const FLAG_SPENDS_ENABLED: u8 = 0b0000_0001;
 const FLAG_OUTPUTS_ENABLED: u8 = 0b0000_0010;
 const FLAGS_EXPECTED_UNSET: u8 = !(FLAG_SPENDS_ENABLED | FLAG_OUTPUTS_ENABLED);
 
+// TODO: no io Flags implementation
+/*
 impl Flags {
     /// Construct a set of flags from its constituent parts
     pub fn from_parts(spends_enabled: bool, outputs_enabled: bool) -> Self {
@@ -227,13 +234,15 @@ impl Flags {
         }
     }
 }
-
+*/
 /// Defines the authorization type of an Orchard bundle.
 pub trait Authorization {
     /// The authorization type of an Orchard action.
     type SpendAuth;
 }
 
+// TODO: enable bundle in std
+/*
 /// A bundle of actions to be applied to the ledger.
 #[derive(Debug, Clone)]
 pub struct Bundle<T: Authorization, V> {
@@ -732,3 +741,4 @@ pub mod testing {
         }
     }
 }
+*/

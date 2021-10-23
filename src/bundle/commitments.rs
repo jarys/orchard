@@ -33,37 +33,30 @@ impl BundleHasher {
     }
 
     fn update<A: Authorization>(mut self, action: Action<A>) {
-        self.ch.write_all(&action.nullifier().to_bytes()).unwrap();
-        self.ch.write_all(&action.cmx().to_bytes()).unwrap();
+        self.ch.update(&action.nullifier().to_bytes());
+        self.ch.update(&action.cmx().to_bytes());
+        self.ch.update(&action.encrypted_note().epk_bytes);
         self.ch
-            .write_all(&action.encrypted_note().epk_bytes)
-            .unwrap();
-        self.ch
-            .write_all(&action.encrypted_note().enc_ciphertext[..52])
-            .unwrap();
+            .update(&action.encrypted_note().enc_ciphertext[..52]);
 
         self.mh
-            .write_all(&action.encrypted_note().enc_ciphertext[52..564])
-            .unwrap();
+            .update(&action.encrypted_note().enc_ciphertext[52..564]);
 
-        self.nh.write_all(&action.cv_net().to_bytes()).unwrap();
-        self.nh.write_all(&<[u8; 32]>::from(action.rk())).unwrap();
+        self.nh.update(&action.cv_net().to_bytes());
+        self.nh.update(&<[u8; 32]>::from(action.rk()));
         self.nh
-            .write_all(&action.encrypted_note().enc_ciphertext[564..])
-            .unwrap();
-        self.nh
-            .write_all(&action.encrypted_note().out_ciphertext)
-            .unwrap();
+            .update(&action.encrypted_note().enc_ciphertext[564..]);
+        self.nh.update(&action.encrypted_note().out_ciphertext);
     }
 
     fn finalize(&self, flags: u8, value_balance: u64, anchor: Anchor) -> Blake2bHash {
         let mut h = hasher(ZCASH_ORCHARD_HASH_PERSONALIZATION);
-        h.write_all(&self.ch.finalize().as_bytes()).unwrap();
-        h.write_all(&self.mh.finalize().as_bytes()).unwrap();
-        h.write_all(&self.nh.finalize().as_bytes()).unwrap();
-        h.write_all(&[flags]).unwrap();
-        h.write_all(&value_balance.to_le_bytes()).unwrap();
-        h.write_all(&anchor.to_bytes()).unwrap();
+        h.update(&self.ch.finalize().as_bytes());
+        h.update(&self.mh.finalize().as_bytes());
+        h.update(&self.nh.finalize().as_bytes());
+        h.update(&[flags]);
+        h.update(&value_balance.to_le_bytes());
+        h.update(&anchor.to_bytes());
         h.finalize()
     }
 }

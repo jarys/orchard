@@ -17,6 +17,57 @@ fn hasher(personal: &[u8; 16]) -> State {
     Params::new().hash_length(32).personal(personal).to_state()
 }
 
+struct BundleHasher {
+    ch: State,
+    mh: State,
+    nh: State,
+}
+
+impl BundleHasher {
+    fn new() -> BundleHasher {
+        BundleHasher {
+            ch: hasher(ZCASH_ORCHARD_ACTIONS_COMPACT_HASH_PERSONALIZATION),
+            mh: hasher(ZCASH_ORCHARD_ACTIONS_MEMOS_HASH_PERSONALIZATION),
+            nh: hasher(ZCASH_ORCHARD_ACTIONS_NONCOMPACT_HASH_PERSONALIZATION),
+        }
+    }
+
+    fn update<A: Authorization>(mut self, action: Action<A>) {
+        self.ch.write_all(&action.nullifier().to_bytes()).unwrap();
+        self.ch.write_all(&action.cmx().to_bytes()).unwrap();
+        self.ch
+            .write_all(&action.encrypted_note().epk_bytes)
+            .unwrap();
+        self.ch
+            .write_all(&action.encrypted_note().enc_ciphertext[..52])
+            .unwrap();
+
+        self.mh
+            .write_all(&action.encrypted_note().enc_ciphertext[52..564])
+            .unwrap();
+
+        self.nh.write_all(&action.cv_net().to_bytes()).unwrap();
+        self.nh.write_all(&<[u8; 32]>::from(action.rk())).unwrap();
+        self.nh
+            .write_all(&action.encrypted_note().enc_ciphertext[564..])
+            .unwrap();
+        self.nh
+            .write_all(&action.encrypted_note().out_ciphertext)
+            .unwrap();
+    }
+
+    fn finalize(&self, flags: u8, value_balance: u64, anchor: Anchor) -> Blake2bHash {
+        let mut h = hasher(ZCASH_ORCHARD_HASH_PERSONALIZATION);
+        h.write_all(&self.ch.finalize().as_bytes()).unwrap();
+        h.write_all(&self.mh.finalize().as_bytes()).unwrap();
+        h.write_all(&self.nh.finalize().as_bytes()).unwrap();
+        h.write_all(&[flags]).unwrap();
+        h.write_all(&value_balance.to_le_bytes()).unwrap();
+        h.write_all(&anchor.to_bytes()).unwrap();
+        h.finalize()
+    }
+}
+
 // TODO: enable in std
 /*
 /// Write disjoint parts of each Orchard shielded action as 3 separate hashes:

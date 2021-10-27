@@ -24,7 +24,9 @@ arrayvec = { version = "0.7.0", default-features = false }
 bitvec = { version = "0.22", default-features = false }
 blake2b_simd = { version = "0.5", default-features = false }
 ff = { version = "0.11", default-features = false, features = ["bits"] }
-fpe = { version = "0.5", default-features = false }
+# TODO: waiting for #21 approval
+#fpe = { version = "0.5", default-features = false }
+fpe = { git = "https://github.com/jarys/fpe.git", branch = "real-no-std" }
 group = { version = "0.11", default-features = false }
 memuse = { version = "0.2", features = ["nonempty"], optional = true }
 # TODO: waiting for no_std + alloc version of pasta_curves from @str4d
@@ -74,7 +76,8 @@ bench = false
 [features]
 default = ["std"]
 alloc = ["group/alloc", "lazy_static",
-         "pasta_curves/alloc", "zcash_note_encryption/alloc"]
+         "pasta_curves/alloc", "zcash_note_encryption/alloc",
+         "fpe/alloc"]
 # TODO: do we really need all default features ?
 std = ["arrayvec/std", "bitvec/std",
        "blake2b_simd/std", "ff/bits", "ff/std",
@@ -82,7 +85,7 @@ std = ["arrayvec/std", "bitvec/std",
        "memuse", "rand/std",
        "rand/std_rng", "nonempty", "subtle/std",
        "subtle/i128",
-       "incrementalmerkletree", "alloc", "fpe/alloc"]
+       "incrementalmerkletree", "alloc"]
 dev-graph = ["halo2/dev-graph", "plotters"]
 test-dependencies = ["proptest"]
 

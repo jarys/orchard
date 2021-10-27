@@ -319,6 +319,7 @@ impl ShieldedOutput<OrchardDomain> for CompactAction {
 #[cfg(feature = "alloc")]
 #[cfg(test)]
 mod tests {
+    use core::convert::TryFrom;
     use rand::rngs::OsRng;
     use zcash_note_encryption::{
         try_compact_note_decryption, try_note_decryption, try_output_recovery_with_ovk,
@@ -386,7 +387,13 @@ mod tests {
                 // rho is the nullifier in the receiving Action.
                 rho,
                 // We don't need a valid rk for this test.
-                redpallas::VerificationKey::dummy(),
+                // redpallas::VerificationKey::dummy(), // TODO: random vk
+                redpallas::VerificationKey::try_from([
+                    0x74, 0x0b, 0xbe, 0x5d, 0x05, 0x80, 0xb2, 0xca, 0xd4, 0x30, 0x18, 0x0d, 0x02,
+                    0xcc, 0x12, 0x8b, 0x9a, 0x14, 0x0d, 0x5e, 0x07, 0xc1, 0x51, 0x72, 0x1d, 0xc1,
+                    0x6d, 0x25, 0xd4, 0xe2, 0x0f, 0x15,
+                ])
+                .unwrap(),
                 cmx,
                 TransmittedNoteCiphertext {
                     epk_bytes: ephemeral_key.0,

@@ -35,11 +35,11 @@ pasta_curves = { git = "https://github.com/jarys/pasta_curves.git", branch="allo
 #pasta_curves = { path = "/home/agi/code/pasta_curves" }
 # TODO: waiting for no-std support PR approval
 #zcash_note_encryption = { version = "0.0", default-features = false }
-zcash_note_encryption = { git = "https://github.com/jarys/librustzcash.git", branch = "no-std-note-encryption", default-features = false }
+zcash_note_encryption = { git = "https://github.com/jarys/librustzcash.git", rev = "024a1440875c85f40579b99813840bae865d2351", default-features = false }
 rand = { version = "0.8", default-features = false }
 rand_core = { version = "0.5", default-features = false }
 nonempty = { version = "0.7", optional = true }
-serde = { version = "1.0", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"], optional = true }
 subtle = { version = "2.3", default-features = false }
 
 # alloc dependencies
@@ -57,7 +57,7 @@ plotters = { version = "0.3.0", optional = true }
 
 # TODO: waiting for new version of reddsa
 #reddsa = { git = "https://github.com/jarys/no_std_redpallas.git", branch = "main" }
-reddsa = { path = "/home/agi/code/no_std_redpallas" }
+reddsa = { git = "https://github.com/jarys/no_std_redpallas", branch = "main", default-features = false }
 #[dependencies.reddsa]
 #git = "https://github.com/str4d/redjubjub.git"
 #rev = "416a6a8ebf8bd42c114c938883016c04f338de72"
@@ -75,7 +75,7 @@ bench = false
 
 [features]
 default = ["std"]
-alloc = ["group/alloc", "lazy_static",
+alloc = ["group/alloc",
          "pasta_curves/alloc", "zcash_note_encryption/alloc",
          "fpe/alloc"]
 # TODO: do we really need all default features ?
@@ -85,7 +85,7 @@ std = ["arrayvec/std", "bitvec/std",
        "memuse", "rand/std",
        "rand/std_rng", "nonempty", "subtle/std",
        "subtle/i128",
-       "incrementalmerkletree", "alloc"]
+       "incrementalmerkletree", "alloc", "lazy_static", "serde"]
 dev-graph = ["halo2/dev-graph", "plotters"]
 test-dependencies = ["proptest"]
 

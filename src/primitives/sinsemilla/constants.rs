@@ -69,12 +69,12 @@ mod tests {
         COMMIT_IVK_PERSONALIZATION, MERKLE_CRH_PERSONALIZATION, NOTE_COMMITMENT_PERSONALIZATION,
     };
     use group::Curve;
-    use pasta_curves::arithmetic::{CurveAffine, CurveExt, FieldExt};
+    use pasta_curves::arithmetic::{CurveAffine, CurveExt};
     use pasta_curves::pallas;
 
     #[test]
     fn sinsemilla_s() {
-        use super::super::sinsemilla_s::SINSEMILLA_S;
+        use super::super::sinsemilla_s as sinsemilla_s_func; //::SINSEMILLA_S;
         let hasher = pallas::Point::hash_to_curve(S_PERSONALIZATION);
 
         for j in 0..(1u32 << K) {
@@ -82,7 +82,8 @@ mod tests {
                 let point = hasher(&j.to_le_bytes()).to_affine().coordinates().unwrap();
                 (*point.x(), *point.y())
             };
-            let actual = SINSEMILLA_S[j as usize];
+            //let actual = SINSEMILLA_S[j as usize];
+            let actual = sinsemilla_s_func(j);
             assert_eq!(computed, actual);
         }
     }

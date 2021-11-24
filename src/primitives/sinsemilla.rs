@@ -2,6 +2,7 @@
 
 use alloc::vec::Vec;
 
+use group::Curve;
 use group::Wnaf;
 use pasta_curves::arithmetic::{CurveAffine, CurveExt};
 use pasta_curves::pallas;
@@ -13,9 +14,9 @@ mod addition;
 use self::addition::IncompletePoint;
 
 mod constants;
-mod sinsemilla_s;
+//mod sinsemilla_s;
 pub use constants::*;
-pub(crate) use sinsemilla_s::*;
+//pub(crate) use sinsemilla_s::*;
 
 pub(crate) fn lebs2ip_k(bits: &[bool]) -> u32 {
     assert!(bits.len() == K);
@@ -99,6 +100,15 @@ pub struct HashDomain {
     Q: pallas::Point,
 }
 
+// TODO: j < 2^K check
+fn sinsemilla_s(j: u32) -> (pallas::Base, pallas::Base) {
+    let hasher = pallas::Point::hash_to_curve(S_PERSONALIZATION);
+    let point = hasher(&j.to_le_bytes()).to_affine().coordinates().unwrap();
+    //let hash = pallas::Point::unboxed_hash_to_curve(S_PERSONALIZATION, &j.to_le_bytes());
+    //let point = hash.to_affine().coordinates().unwrap();
+    (*point.x(), *point.y())
+}
+
 impl HashDomain {
     /// Constructs a new `HashDomain` with a specific prefix string.
     pub fn new(domain: &str) -> Self {
@@ -121,7 +131,8 @@ impl HashDomain {
         padded
             .chunks(K)
             .fold(IncompletePoint::from(self.Q), |acc, chunk| {
-                let (S_x, S_y) = SINSEMILLA_S[lebs2ip_k(chunk) as usize];
+                let (S_x, S_y) = sinsemilla_s(lebs2ip_k(chunk) as u32);
+                //let (S_x, S_y) = SINSEMILLA_S[lebs2ip_k(chunk) as usize];
                 let S_chunk = pallas::Affine::from_xy(S_x, S_y).unwrap();
                 (acc + S_chunk) + acc
             })

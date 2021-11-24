@@ -181,7 +181,8 @@ impl SpendValidatingKey {
 
     /// Converts this spend validating key to its serialized form,
     /// I2LEOSP_256(ak).
-    pub(crate) fn to_bytes(&self) -> [u8; 32] {
+    pub fn to_bytes(&self) -> [u8; 32] {
+        // TODO: pub(crate) visibility
         // This is correct because the wrapped point must have ỹ = 0, and
         // so the point repr is the same as I2LEOSP of its x-coordinate.
         <[u8; 32]>::from(&self.0)
@@ -210,7 +211,7 @@ impl SpendValidatingKey {
 /// [`Note`]: crate::note::Note
 /// [orchardkeycomponents]: https://zips.z.cash/protocol/nu5.pdf#orchardkeycomponents
 #[derive(Copy, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub(crate) struct NullifierDerivingKey(pallas::Base);
+pub struct NullifierDerivingKey(pallas::Base); // TODO: pub(crate) visibility
 
 impl NullifierDerivingKey {
     pub(crate) fn inner(&self) -> pallas::Base {
@@ -230,7 +231,8 @@ impl NullifierDerivingKey {
     }
 
     /// Converts this nullifier deriving key to its serialized form.
-    pub(crate) fn to_bytes(&self) -> [u8; 32] {
+    pub fn to_bytes(&self) -> [u8; 32] {
+        // TODO: pub(crate) visibility
         <[u8; 32]>::from(self.0)
     }
 
@@ -572,7 +574,7 @@ impl IncomingViewingKey {
     /// [orchardrawinviewingkeys]: https://zips.z.cash/protocol/protocol.pdf#orchardinviewingkeyencoding
     pub fn to_bytes(&self) -> [u8; 64] {
         let mut result = [0u8; 64];
-        result.copy_from_slice(self.dk.to_bytes());
+        result[..32].copy_from_slice(self.dk.to_bytes());
         result[32..].copy_from_slice(&self.ivk.0.to_repr());
         result
     }

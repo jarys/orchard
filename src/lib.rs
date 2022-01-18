@@ -31,6 +31,8 @@ pub mod tree;
 pub mod value;
 pub mod zip32;
 
+pub mod hww;
+
 #[cfg(test)]
 mod test_vectors;
 

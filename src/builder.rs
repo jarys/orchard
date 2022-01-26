@@ -376,6 +376,215 @@ impl Builder {
             },
         ))
     }
+
+    /// Builds a bundle containing the given spent notes and recipients.
+    ///
+    /// This API assumes that none of the notes being spent are controlled by (threshold)
+    /// multisignatures, and immediately constructs the bundle proof.
+    pub fn build_online<V: TryFrom<i64>>(
+        self,
+        mut rng: impl RngCore,
+    ) -> Result<Bundle<InProgress<Unproven, Unauthorized>, V>, Error> {
+        // Pair up the spends and recipients, extending with dummy values as necessary.
+        //
+        // TODO: Do we want to shuffle the order like we do for Sapling? And if we do, do
+        // we need the extra logic for mapping the user-provided input order to the
+        // shuffled order?
+        //let mut pre_actions = Vec::new();
+        /*let num_actions = [self.spends.len(), self.recipients.len(), MIN_ACTIONS]
+            .iter()
+            .max()
+            .cloned()
+            .unwrap();
+        */
+        let s = self.spends.into_iter().map(Some); //.chain(iter::repeat(None));
+
+        /*let r = self
+            .recipients
+            .into_iter()
+            .map(Some)
+            .chain(iter::repeat(None));
+        *//*
+        s
+            .zip(r)
+            .map(|(spend, recipient)| ActionInfo2::new(spend, recipient))
+            .collect()*/
+
+        /*let pre_actions: Vec<ActionInfo2> = self
+            .spends
+            .into_iter()
+            .map(Some)
+            .collect()
+            .extend(iter::repeat(None))
+            .into_iter()
+            //.chain(iter::repeat(None))
+            .zip(
+                self.recipients.into_iter().map(Some), //.chain(iter::repeat(None))
+            )
+            .take(3)
+            .map(|(spend, recipient)| ActionInfo2::new(spend, recipient))
+            .collect();
+        */
+        /*let mut spends_iter = self.spends.into_iter();
+        let mut recipients_iter = self.recipients.into_iter();
+        for _ in 0..num_actions {
+            pre_actions.push(ActionInfo2::new(spends_iter.next(), recipients_iter.next()))
+        }*/
+
+        // Move some things out of self that we will need.
+        let flags = self.flags;
+        let anchor = self.anchor;
+
+        // Determine the value balance for this bundle, ensuring it is valid.
+        let value_balance = pre_actions
+            .iter()
+            .fold(Some(ValueSum::zero()), |acc, action| {
+                acc? + action.value_sum()?
+            })
+            .ok_or(OverflowError)?;
+
+        let result_value_balance: V = i64::try_from(value_balance)
+            .map_err(Error::ValueSum)
+            .and_then(|i| V::try_from(i).map_err(|_| Error::ValueSum(value::OverflowError)))?;
+
+        // Create the actions.
+        let (actions, circuits): (Vec<_>, Vec<_>) =
+            pre_actions.into_iter().map(|a| a.build(&mut rng)).unzip();
+
+        // Compute the transaction binding signing key.
+        let bsk = circuits
+            .iter()
+            .map(|c| c.rcv.unwrap().as_ref())
+            .sum::<ValueCommitTrapdoor>()
+            .into_bsk();
+
+        // Verify that bsk and bvk are consistent.
+        let bvk = (actions.iter().map(|a| a.cv_net()).sum::<ValueCommitment>()
+            - ValueCommitment::derive(value_balance, ValueCommitTrapdoor::zero()))
+        .into_bvk();
+        assert_eq!(redpallas::VerificationKey::from(&bsk), bvk);
+
+        Ok(Bundle::from_parts(
+            NonEmpty::from_vec(actions).unwrap(),
+            flags,
+            result_value_balance,
+            anchor,
+            InProgress {
+                proof: Unproven { circuits },
+                sigs: Unauthorized { bsk },
+            },
+        ))
+    }
+}
+
+/// Information about a specific [`Action`] we plan to build.
+#[derive(Debug)]
+struct ActionInfo2 {
+    spend: Option<SpendInfo>,
+    output: Option<RecipientInfo>,
+}
+
+impl ActionInfo2 {
+    fn new(spend: Option<SpendInfo>, output: Option<RecipientInfo>) -> Self {
+        ActionInfo2 { spend, output }
+    }
+
+    /// Returns the value sum for this action.
+    fn value_sum(&self) -> Option<ValueSum> {
+        let input = match self.spend {
+            Some(s) => s.note.value(),
+            None => NoteValue::zero(),
+        };
+        let output = match self.output {
+            Some(o) => o.value,
+            None => NoteValue::zero(),
+        };
+        input - output
+    }
+
+    /// Builds the action.
+    ///
+    /// Defined in [Zcash Protocol Spec § 4.7.3: Sending Notes (Orchard)][orchardsend].
+    ///
+    /// [orchardsend]: https://zips.z.cash/protocol/nu5.pdf#orchardsend
+    fn build(self, mut rng: impl RngCore) -> (Action<SigningMetadata>, Circuit) {
+        let rcv = ValueCommitTrapdoor::random(rng);
+        let spend = self.spend.unwrap_or_else(|| SpendInfo::dummy(&mut rng));
+        let output = self
+            .output
+            .unwrap_or_else(|| RecipientInfo::dummy(&mut rng));
+
+        let v_net = self.value_sum().expect("already checked this");
+        let cv_net = ValueCommitment::derive(v_net, rcv.clone());
+
+        let nf_old = spend.note.nullifier(&spend.fvk);
+        let sender_address = spend.fvk.default_address();
+        let rho_old = spend.note.rho();
+        let psi_old = spend.note.rseed().psi(&rho_old);
+        let rcm_old = spend.note.rseed().rcm(&rho_old);
+        let ak: SpendValidatingKey = spend.fvk.clone().into();
+        let alpha = pallas::Scalar::random(&mut rng);
+        let rk = ak.randomize(&alpha);
+
+        let note = Note::new(output.recipient, output.value, nf_old, &mut rng);
+        let cm_new = note.commitment();
+        let cmx = cm_new.into();
+
+        let encryptor = OrchardNoteEncryption::new(
+            output.ovk,
+            note,
+            output.recipient,
+            output.memo.unwrap_or_else(|| {
+                let mut memo = [0; 512];
+                memo[0] = 0xf6;
+                memo
+            }),
+        );
+
+        let encrypted_note = TransmittedNoteCiphertext {
+            epk_bytes: encryptor.epk().to_bytes().0,
+            enc_ciphertext: encryptor.encrypt_note_plaintext(),
+            out_ciphertext: encryptor.encrypt_outgoing_plaintext(&cv_net, &cmx, &mut rng),
+        };
+
+        (
+            Action::from_parts(
+                nf_old,
+                rk,
+                cmx,
+                encrypted_note,
+                cv_net,
+                SigningMetadata {
+                    dummy_ask: spend.dummy_sk.as_ref().map(SpendAuthorizingKey::from),
+                    parts: SigningParts {
+                        ak: ak.clone(),
+                        alpha,
+                    },
+                },
+            ),
+            Circuit {
+                path: Some(spend.merkle_path.auth_path()),
+                pos: Some(spend.merkle_path.position()),
+                g_d_old: Some(sender_address.g_d()),
+                pk_d_old: Some(*sender_address.pk_d()),
+                v_old: Some(spend.note.value()),
+                rho_old: Some(rho_old),
+                psi_old: Some(psi_old),
+                rcm_old: Some(rcm_old),
+                cm_old: Some(spend.note.commitment()),
+                alpha: Some(alpha),
+                ak: Some(ak),
+                nk: Some(*spend.fvk.nk()),
+                rivk: Some(*spend.fvk.rivk()),
+                g_d_new_star: Some((*note.recipient().g_d()).to_bytes()),
+                pk_d_new_star: Some(note.recipient().pk_d().to_bytes()),
+                v_new: Some(note.value()),
+                psi_new: Some(note.rseed().psi(&note.rho())),
+                rcm_new: Some(note.rseed().rcm(&note.rho())),
+                rcv: Some(rcv),
+            },
+        )
+    }
 }
 
 /// Marker trait representing bundle signatures in the process of being created.
@@ -448,7 +657,7 @@ pub struct SigningParts {
     /// actions they can create signatures for.
     ak: SpendValidatingKey,
     /// The randomization needed to derive the actual signing key for this note.
-    alpha: pallas::Scalar,
+    pub(crate) alpha: pallas::Scalar,
 }
 
 /// Marker for an unauthorized bundle with no signatures.

@@ -178,3 +178,30 @@ pub fn shield(
 pub fn get_dummy_merkle_path(mut rng: &mut impl RngCore) -> crate::tree::MerklePath {
     crate::tree::MerklePath::dummy(&mut rng)
 }
+
+use crate::{
+    builder::{Builder, InProgress, MaybeSigned, PartiallyAuthorized},
+    primitives::redpallas::{Signature, SpendAuth},
+    Bundle,
+};
+
+impl<P, V> Bundle<InProgress<P, PartiallyAuthorized>, V> {
+    /// Appends a [`Signature`] according to the randomizer alpha.
+    pub fn append_signature(
+        self,
+        expected_alpha: pallas::Scalar,
+        signature: &Signature<SpendAuth>,
+        mut rng: impl RngCore,
+    ) -> Self {
+        self.authorize(
+            &mut rng,
+            |_, _, maybe| match maybe {
+                MaybeSigned::SigningMetadata(parts) if parts.alpha == expected_alpha => {
+                    MaybeSigned::Signature(signature.clone())
+                }
+                s => s,
+            },
+            |_, partial| partial,
+        )
+    }
+}

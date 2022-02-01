@@ -111,6 +111,12 @@ impl<T: SigType> Ord for VerificationKey<T> {
     }
 }
 
+impl<T: SigType> VerificationKey<T> {
+    /// Verify a purported `signature` over `msg` made by this verification key.
+    pub fn verify(&self, msg: &[u8], signature: &Signature<T>) -> Result<(), reddsa::Error> {
+        self.0.verify(msg, &signature.0)
+    }
+}
 impl VerificationKey<SpendAuth> {
     /// Used in the note encryption tests.
     #[cfg(test)]

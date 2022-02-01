@@ -390,25 +390,11 @@ impl Builder {
         // TODO: Do we want to shuffle the order like we do for Sapling? And if we do, do
         // we need the extra logic for mapping the user-provided input order to the
         // shuffled order?
-        //let mut pre_actions = Vec::new();
-        /*let num_actions = [self.spends.len(), self.recipients.len(), MIN_ACTIONS]
+        let num_actions = [self.spends.len(), self.recipients.len(), MIN_ACTIONS]
             .iter()
             .max()
             .cloned()
             .unwrap();
-        */
-        let s = self.spends.into_iter().map(Some); //.chain(iter::repeat(None));
-
-        /*let r = self
-            .recipients
-            .into_iter()
-            .map(Some)
-            .chain(iter::repeat(None));
-        *//*
-        s
-            .zip(r)
-            .map(|(spend, recipient)| ActionInfo2::new(spend, recipient))
-            .collect()*/
 
         /*let pre_actions: Vec<ActionInfo2> = self
             .spends
@@ -425,11 +411,13 @@ impl Builder {
             .map(|(spend, recipient)| ActionInfo2::new(spend, recipient))
             .collect();
         */
-        /*let mut spends_iter = self.spends.into_iter();
+
+        let mut pre_actions: Vec<ActionInfo2> = vec![];
+        let mut spends_iter = self.spends.into_iter();
         let mut recipients_iter = self.recipients.into_iter();
         for _ in 0..num_actions {
             pre_actions.push(ActionInfo2::new(spends_iter.next(), recipients_iter.next()))
-        }*/
+        }
 
         // Move some things out of self that we will need.
         let flags = self.flags;
@@ -452,9 +440,9 @@ impl Builder {
             pre_actions.into_iter().map(|a| a.build(&mut rng)).unzip();
 
         // Compute the transaction binding signing key.
-        let bsk = circuits
+        let bsk = (&circuits)
             .iter()
-            .map(|c| c.rcv.unwrap().as_ref())
+            .map(|c| (&c.rcv).as_ref().unwrap())
             .sum::<ValueCommitTrapdoor>()
             .into_bsk();
 
@@ -491,11 +479,11 @@ impl ActionInfo2 {
 
     /// Returns the value sum for this action.
     fn value_sum(&self) -> Option<ValueSum> {
-        let input = match self.spend {
+        let input = match self.spend.as_ref() {
             Some(s) => s.note.value(),
             None => NoteValue::zero(),
         };
-        let output = match self.output {
+        let output = match self.output.as_ref() {
             Some(o) => o.value,
             None => NoteValue::zero(),
         };
@@ -508,13 +496,13 @@ impl ActionInfo2 {
     ///
     /// [orchardsend]: https://zips.z.cash/protocol/nu5.pdf#orchardsend
     fn build(self, mut rng: impl RngCore) -> (Action<SigningMetadata>, Circuit) {
-        let rcv = ValueCommitTrapdoor::random(rng);
+        let rcv = ValueCommitTrapdoor::random(&mut rng);
+        let v_net = self.value_sum().expect("already checked this");
         let spend = self.spend.unwrap_or_else(|| SpendInfo::dummy(&mut rng));
         let output = self
             .output
             .unwrap_or_else(|| RecipientInfo::dummy(&mut rng));
 
-        let v_net = self.value_sum().expect("already checked this");
         let cv_net = ValueCommitment::derive(v_net, rcv.clone());
 
         let nf_old = spend.note.nullifier(&spend.fvk);
@@ -819,6 +807,30 @@ impl<P: fmt::Debug, V> Bundle<InProgress<P, PartiallyAuthorized>, V> {
             1 => Ok(bundle),
             _ => Err(Error::DuplicateSignature),
         }
+    }
+}
+
+impl<P, V> Bundle<InProgress<P, PartiallyAuthorized>, V> {
+    /// Appends a [`Signature`] according to the randomizer alpha.
+    pub fn append_signature(
+        self,
+        expected_alpha: pallas::Scalar,
+        signature: &redpallas::Signature<SpendAuth>,
+        mut rng: impl RngCore,
+    ) -> Result<Self, Error> {
+        self.try_authorize(
+            &mut rng,
+            |_, partial, maybe| match maybe {
+                MaybeSigned::SigningMetadata(parts) if parts.alpha == expected_alpha => {
+                    let rk = parts.ak.randomize(&parts.alpha);
+                    rk.verify(&partial.sigs.sighash[..], signature)
+                        .map_err(|_| Error::InvalidSignature)?;
+                    Ok(MaybeSigned::Signature(signature.clone()))
+                }
+                s => Ok(s),
+            },
+            |_, partial| Ok(partial),
+        )
     }
 }
 

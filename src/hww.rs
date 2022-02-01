@@ -117,6 +117,7 @@ pub fn shield(
     )>,
     mut rng: impl RngCore,
 ) -> Action<SigningMetadata> {
+    let rcv = ValueCommitTrapdoor::random(&mut rng);
     let spend = match spend {
         Some((fvk, note)) => SpendInfo {
             dummy_sk: None,
@@ -134,7 +135,6 @@ pub fn shield(
         },
         None => RecipientInfo::dummy(&mut rng),
     };
-    let rcv = ValueCommitTrapdoor::random(&mut rng);
     let v_net = spend.note.value() - output.value;
     let cv_net = ValueCommitment::derive(v_net, rcv.clone());
 
@@ -177,31 +177,4 @@ pub fn shield(
 /// get dummy merkle path
 pub fn get_dummy_merkle_path(mut rng: &mut impl RngCore) -> crate::tree::MerklePath {
     crate::tree::MerklePath::dummy(&mut rng)
-}
-
-use crate::{
-    builder::{Builder, InProgress, MaybeSigned, PartiallyAuthorized},
-    primitives::redpallas::{Signature, SpendAuth},
-    Bundle,
-};
-
-impl<P, V> Bundle<InProgress<P, PartiallyAuthorized>, V> {
-    /// Appends a [`Signature`] according to the randomizer alpha.
-    pub fn append_signature(
-        self,
-        expected_alpha: pallas::Scalar,
-        signature: &Signature<SpendAuth>,
-        mut rng: impl RngCore,
-    ) -> Self {
-        self.authorize(
-            &mut rng,
-            |_, _, maybe| match maybe {
-                MaybeSigned::SigningMetadata(parts) if parts.alpha == expected_alpha => {
-                    MaybeSigned::Signature(signature.clone())
-                }
-                s => s,
-            },
-            |_, partial| partial,
-        )
-    }
 }

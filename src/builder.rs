@@ -386,37 +386,28 @@ impl Builder {
         mut rng: impl RngCore,
     ) -> Result<Bundle<InProgress<Unproven, Unauthorized>, V>, Error> {
         // Pair up the spends and recipients, extending with dummy values as necessary.
-        //
-        // TODO: Do we want to shuffle the order like we do for Sapling? And if we do, do
-        // we need the extra logic for mapping the user-provided input order to the
-        // shuffled order?
         let num_actions = [self.spends.len(), self.recipients.len(), MIN_ACTIONS]
             .iter()
             .max()
             .cloned()
             .unwrap();
-
-        /*let pre_actions: Vec<ActionInfo2> = self
-            .spends
-            .into_iter()
-            .map(Some)
-            .collect()
-            .extend(iter::repeat(None))
-            .into_iter()
-            //.chain(iter::repeat(None))
-            .zip(
-                self.recipients.into_iter().map(Some), //.chain(iter::repeat(None))
-            )
-            .take(3)
-            .map(|(spend, recipient)| ActionInfo2::new(spend, recipient))
-            .collect();
-        */
+        let num_spends = self.spends.len();
+        let num_recipients = self.recipients.len();
 
         let mut pre_actions: Vec<ActionInfo2> = vec![];
-        let mut spends_iter = self.spends.into_iter();
-        let mut recipients_iter = self.recipients.into_iter();
-        for _ in 0..num_actions {
-            pre_actions.push(ActionInfo2::new(spends_iter.next(), recipients_iter.next()))
+
+        let mut padded_spends: Vec<Option<SpendInfo>> = self.spends.into_iter().map(Some).collect();
+        padded_spends.extend(iter::repeat_with(|| None).take(num_actions - num_spends));
+
+        let mut padded_recipients: Vec<Option<RecipientInfo>> =
+            self.recipients.into_iter().map(Some).collect();
+        padded_recipients.extend(iter::repeat_with(|| None).take(num_actions - num_recipients));
+
+        padded_spends.shuffle(&mut rng);
+        padded_recipients.shuffle(&mut rng);
+
+        for (spend, recipient) in padded_spends.into_iter().zip(padded_recipients.into_iter()) {
+            pre_actions.push(ActionInfo2::new(spend, recipient));
         }
 
         // Move some things out of self that we will need.
@@ -506,7 +497,7 @@ impl ActionInfo2 {
         let cv_net = ValueCommitment::derive(v_net, rcv.clone());
 
         let nf_old = spend.note.nullifier(&spend.fvk);
-        let sender_address = spend.fvk.default_address();
+        let sender_address = spend.fvk.address_at(0u32);
         let rho_old = spend.note.rho();
         let psi_old = spend.note.rseed().psi(&rho_old);
         let rcm_old = spend.note.rseed().rcm(&rho_old);
@@ -810,7 +801,7 @@ impl<P: fmt::Debug, V> Bundle<InProgress<P, PartiallyAuthorized>, V> {
     }
 }
 
-impl<P, V> Bundle<InProgress<P, PartiallyAuthorized>, V> {
+impl<P: std::fmt::Debug, V> Bundle<InProgress<P, PartiallyAuthorized>, V> {
     /// Appends a [`Signature`] according to the randomizer alpha.
     pub fn append_signature(
         self,

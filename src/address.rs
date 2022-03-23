@@ -30,6 +30,7 @@ impl Address {
         Address { d, pk_d }
     }
 
+    /// Returns Address Diversifier
     pub fn diversifier(&self) -> Diversifier {
         self.d
     }

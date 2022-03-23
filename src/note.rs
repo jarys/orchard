@@ -127,7 +127,7 @@ impl Note {
     /// Defined in [Zcash Protocol Spec § 4.7.3: Sending Notes (Orchard)][orchardsend].
     ///
     /// [orchardsend]: https://zips.z.cash/protocol/nu5.pdf#orchardsend
-    pub(crate) fn new(
+    pub fn new(
         recipient: Address,
         value: NoteValue,
         rho: Nullifier,

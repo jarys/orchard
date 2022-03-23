@@ -4,6 +4,7 @@ use core::fmt;
 use group::GroupEncoding;
 use pasta_curves::pallas;
 use rand::RngCore;
+use std::convert::TryInto;
 use subtle::CtOption;
 
 use crate::{
@@ -234,6 +235,31 @@ impl Note {
             self.rseed.psi(&self.rho),
             self.commitment(),
         )
+    }
+
+    /// Serializes a note
+    pub fn to_bytes(&self) -> [u8; 115] {
+        let mut result = [0u8; 115];
+        result[0..43].clone_from_slice(&self.recipient().to_raw_address_bytes()[..]);
+        result[43..51].copy_from_slice(&self.value().to_bytes());
+        result[51..83].copy_from_slice(&self.rho().to_bytes());
+        result[83..115].copy_from_slice(self.rseed().as_bytes());
+        result
+    }
+
+    /// Deserializes a note
+    pub fn from_bytes(bytes: [u8; 115]) -> Option<Self> {
+        let recipient: [u8; 43] = (&bytes[0..43]).try_into().ok()?;
+        let value: [u8; 8] = (&bytes[43..51]).try_into().ok()?;
+        let rho: [u8; 32] = (&bytes[51..83]).try_into().ok()?;
+        let rseed: [u8; 32] = (&bytes[83..105]).try_into().ok()?;
+
+        let recipient: Address = Option::from(Address::from_raw_address_bytes(&recipient))?;
+        let value: NoteValue = NoteValue::from_bytes(value);
+        let rho: Nullifier = Option::from(Nullifier::from_bytes(&rho))?;
+        let rseed: RandomSeed = Option::from(RandomSeed::from_bytes(rseed, &rho))?;
+
+        Some(Note::from_parts(recipient, value, rho, rseed))
     }
 }
 

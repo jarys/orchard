@@ -4,9 +4,11 @@ use core::mem;
 #[cfg(feature = "std")]
 use std::io::{self, Read, Write};
 
+use crate::bit_string_88::BitString88 as BinaryNumeralString;
 use aes::Aes256;
 use blake2b_simd::{Hash as Blake2bHash, Params};
-use fpe::ff1::{BinaryNumeralString, FF1};
+//use fpe::ff1::{BinaryNumeralString
+use fpe::ff1::FF1;
 #[cfg(feature = "std")]
 use group::prime::PrimeCurveAffine;
 use group::{

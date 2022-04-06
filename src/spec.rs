@@ -205,8 +205,15 @@ pub(crate) fn diversify_hash(d: &[u8; 11]) -> NonIdentityPallasPoint {
 ///
 /// [concreteprfs]: https://zips.z.cash/protocol/nu5.pdf#concreteprfs
 pub(crate) fn prf_nf(nk: pallas::Base, rho: pallas::Base) -> pallas::Base {
-    poseidon::Hash::<_, poseidon::P128Pow5T3, poseidon::ConstantLength<2>, 3, 2>::init()
-        .hash([nk, rho])
+    #[cfg(feature = "std")]
+    {
+        poseidon::Hash::<_, poseidon::P128Pow5T3, poseidon::ConstantLength<2>, 3, 2>::init()
+            .hash([nk, rho])
+    }
+    #[cfg(not(feature = "std"))]
+    {
+        poseidon::hash(nk, rho)
+    }
 }
 
 /// Defined in [Zcash Protocol Spec § 5.4.5.5: Orchard Key Agreement][concreteorchardkeyagreement].
@@ -216,8 +223,15 @@ pub(crate) fn ka_orchard(
     sk: &NonZeroPallasScalar,
     b: &NonIdentityPallasPoint,
 ) -> NonIdentityPallasPoint {
-    let mut wnaf = group::Wnaf::new();
-    NonIdentityPallasPoint(wnaf.scalar(sk.deref()).base(*b.deref()))
+    #[cfg(feature = "std")]
+    {
+        let mut wnaf = group::Wnaf::new();
+        NonIdentityPallasPoint(wnaf.scalar(sk.deref()).base(*b.deref()))
+    }
+    #[cfg(not(feature = "std"))]
+    {
+        NonIdentityPallasPoint((*b.deref()) * (*sk.deref()))
+    }
 }
 
 /// Coordinate extractor for Pallas.

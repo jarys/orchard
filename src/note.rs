@@ -2,6 +2,8 @@
 use core::fmt;
 
 use group::GroupEncoding;
+#[cfg(feature = "std")]
+use hex;
 use pasta_curves::pallas;
 use rand::RngCore;
 use subtle::CtOption;
@@ -249,6 +251,7 @@ pub struct TransmittedNoteCiphertext {
     pub out_ciphertext: [u8; 80],
 }
 
+#[cfg(feature = "std")]
 impl fmt::Debug for TransmittedNoteCiphertext {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("TransmittedNoteCiphertext")

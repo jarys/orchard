@@ -15,7 +15,8 @@ use crate::{
 ///
 /// Internally, this may both consume a note and create a note, or it may do only one of
 /// the two. TODO: Determine which is more efficient (circuit size vs bundle size).
-#[derive(Debug, Clone)]
+#[cfg_attr(feature = "std", derive(Debug))]
+#[derive(Clone)]
 pub struct Action<A> {
     /// The nullifier of the note being spent.
     nf: Nullifier,

@@ -48,7 +48,6 @@ use pasta_curves::{
     arithmetic::{CurveAffine, CurveExt},
     pallas,
 };
-#[cfg(feature = "std")]
 use rand::RngCore;
 use subtle::CtOption;
 
@@ -238,7 +237,6 @@ impl<'a> Sum<&'a ValueCommitTrapdoor> for ValueCommitTrapdoor {
 
 impl ValueCommitTrapdoor {
     /// Generates a new value commitment trapdoor.
-    #[cfg(feature = "std")]
     pub(crate) fn random(rng: impl RngCore) -> Self {
         ValueCommitTrapdoor(pallas::Scalar::random(rng))
     }

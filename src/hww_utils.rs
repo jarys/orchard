@@ -7,8 +7,9 @@ use pasta_curves::pallas;
 use rand::RngCore;
 
 use crate::{
+    action::Action,
     address::Address,
-    bundle::{Action, Authorization},
+    bundle::Authorization,
     keys::{FullViewingKey, OutgoingViewingKey, Scope, SpendValidatingKey, SpendingKey},
     note::{self, Note, TransmittedNoteCiphertext},
     note_encryption::OrchardNoteEncryption,
@@ -132,7 +133,7 @@ pub fn shield(
         None => RecipientInfo::dummy(&mut rng),
     };
 
-    let v_net = (spend.note.value() - output.value).expect("already checked this");
+    let v_net = spend.note.value() - output.value;
     let cv_net = ValueCommitment::derive(v_net, rcv.clone());
 
     let nf_old = spend.note.nullifier(&spend.fvk);

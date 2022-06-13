@@ -17,12 +17,8 @@ use nonempty::NonEmpty;
 #[cfg(feature = "std")]
 use zcash_note_encryption::{try_note_decryption, try_output_recovery_with_ovk};
 
-use crate::{
-    action::Action,
-    note::{ExtractedNoteCommitment, Nullifier, TransmittedNoteCiphertext},
-    primitives::redpallas::{self, SpendAuth},
-    value::ValueCommitment,
-};
+#[cfg(feature = "std")]
+use crate::action::Action;
 
 #[cfg(feature = "std")]
 use crate::{
@@ -31,16 +27,19 @@ use crate::{
     circuit::{Instance, Proof, VerifyingKey},
     keys::{IncomingViewingKey, OutgoingViewingKey},
     note::Note,
+    note::{ExtractedNoteCommitment, Nullifier, TransmittedNoteCiphertext},
     note_encryption::OrchardDomain,
     primitives::redpallas::Binding,
+    primitives::redpallas::{self, SpendAuth},
     tree::Anchor,
+    value::ValueCommitment,
     value::{ValueCommitTrapdoor, ValueSum},
 };
 
+#[cfg(feature = "std")]
 impl<T> Action<T> {
     /// Prepares the public instance for this action, for creating and verifying the
     /// bundle proof.
-    #[cfg(feature = "std")]
     pub fn to_instance(&self, flags: Flags, anchor: Anchor) -> Instance {
         Instance {
             anchor,

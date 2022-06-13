@@ -1,4 +1,5 @@
 //! Data structures used for note construction.
+#[cfg(feature = "std")]
 use core::fmt;
 
 use group::GroupEncoding;

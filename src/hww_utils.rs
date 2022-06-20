@@ -10,6 +10,7 @@ use crate::{
     action::Action,
     address::Address,
     bundle::Authorization,
+    constants::MERKLE_DEPTH_ORCHARD,
     keys::{FullViewingKey, OutgoingViewingKey, Scope, SpendValidatingKey, SpendingKey},
     note::{self, Note, TransmittedNoteCiphertext},
     note_encryption::OrchardNoteEncryption,
@@ -53,9 +54,14 @@ impl SpendInfo {
     /// Defined in [Zcash Protocol Spec § 4.8.3: Dummy Notes (Orchard)][orcharddummynotes].
     ///
     /// [orcharddummynotes]: https://zips.z.cash/protocol/nu5.pdf#orcharddummynotes
-    fn dummy(rng: &mut impl RngCore) -> Self {
-        let (sk, fvk, note) = Note::dummy(rng, None);
-
+    fn dummy(mut rng: &mut impl RngCore) -> Self {
+        let (sk, fvk, note) = Note::dummy(&mut rng, None);
+        // merkle path
+        let _ = rng.next_u32();
+        // auth path
+        for _ in 0..MERKLE_DEPTH_ORCHARD {
+            pallas::Base::random(&mut rng);
+        }
         SpendInfo {
             dummy_sk: Some(sk),
             fvk,

@@ -29,7 +29,7 @@ blake2b_simd = { version = "1", default-features = false }
 ff = { version = "0.12", default-features = false, features = ["bits"] }
 fpe = { version = "0.5", default-features = false, features = ["alloc"] }
 group = { version = "0.12", default-features = false }
-halo2_gadgets = "0.2"
+halo2_gadgets = { git = "https://github.com/jarys/halo2_gadgets", branch = "empty" }
 halo2_proofs = { version = "0.2", optional = true }
 hex = { version = "0.4", default-features = false }
 lazy_static = { version = "1", optional = true }

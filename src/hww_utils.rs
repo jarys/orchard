@@ -9,7 +9,6 @@ use rand::RngCore;
 use crate::{
     action::Action,
     address::Address,
-    bundle::Authorization,
     constants::MERKLE_DEPTH_ORCHARD,
     keys::{FullViewingKey, OutgoingViewingKey, Scope, SpendValidatingKey, SpendingKey},
     note::{self, Note, TransmittedNoteCiphertext},
@@ -103,10 +102,6 @@ pub struct SigningMetadata {
     pub ak: SpendValidatingKey,
     /// The randomization needed to derive the actual signing key for this note.
     pub alpha: pallas::Scalar,
-}
-
-impl Authorization for SigningMetadata {
-    type SpendAuth = Self;
 }
 
 /// Shields an Action

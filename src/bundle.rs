@@ -1,42 +1,30 @@
 //! Structs related to bundles of Orchard actions.
 
 mod batch;
-#[cfg(feature = "std")]
 pub mod commitments;
 
 pub use batch::BatchValidator;
 
 use core::fmt;
 
-#[cfg(feature = "std")]
 use blake2b_simd::Hash as Blake2bHash;
-#[cfg(feature = "std")]
 use memuse::DynamicUsage;
-#[cfg(feature = "std")]
 use nonempty::NonEmpty;
-#[cfg(feature = "std")]
 use zcash_note_encryption::{try_note_decryption, try_output_recovery_with_ovk};
 
-#[cfg(feature = "std")]
-use crate::action::Action;
-
-#[cfg(feature = "std")]
 use crate::{
+    action::Action,
     address::Address,
     bundle::commitments::{hash_bundle_auth_data, hash_bundle_txid_data},
     circuit::{Instance, Proof, VerifyingKey},
     keys::{IncomingViewingKey, OutgoingViewingKey},
     note::Note,
-    note::{ExtractedNoteCommitment, Nullifier, TransmittedNoteCiphertext},
     note_encryption::OrchardDomain,
-    primitives::redpallas::Binding,
-    primitives::redpallas::{self, SpendAuth},
+    primitives::redpallas::{self, Binding, SpendAuth},
     tree::Anchor,
-    value::ValueCommitment,
-    value::{ValueCommitTrapdoor, ValueSum},
+    value::{ValueCommitTrapdoor, ValueCommitment, ValueSum},
 };
 
-#[cfg(feature = "std")]
 impl<T> Action<T> {
     /// Prepares the public instance for this action, for creating and verifying the
     /// bundle proof.
@@ -141,7 +129,6 @@ pub trait Authorization: fmt::Debug {
 }
 
 /// A bundle of actions to be applied to the ledger.
-#[cfg(feature = "std")]
 #[derive(Clone)]
 pub struct Bundle<T: Authorization, V> {
     /// The list of actions that make up this bundle.
@@ -158,7 +145,6 @@ pub struct Bundle<T: Authorization, V> {
     authorization: T,
 }
 
-#[cfg(feature = "std")]
 impl<T: Authorization, V: fmt::Debug> fmt::Debug for Bundle<T, V> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         /// Helper struct for debug-printing actions without exposing `NonEmpty`.
@@ -179,7 +165,6 @@ impl<T: Authorization, V: fmt::Debug> fmt::Debug for Bundle<T, V> {
     }
 }
 
-#[cfg(feature = "std")]
 impl<T: Authorization, V> Bundle<T, V> {
     /// Constructs a `Bundle` from its constituent parts.
     pub fn from_parts(
@@ -374,7 +359,6 @@ impl<T: Authorization, V> Bundle<T, V> {
     }
 }
 
-#[cfg(feature = "std")]
 impl<T: Authorization, V: Copy + Into<i64>> Bundle<T, V> {
     /// Computes a commitment to the effects of this bundle, suitable for inclusion within
     /// a transaction ID.
@@ -401,19 +385,16 @@ impl<T: Authorization, V: Copy + Into<i64>> Bundle<T, V> {
 }
 
 /// Authorizing data for a bundle of actions, ready to be committed to the ledger.
-#[cfg(feature = "std")]
 #[derive(Debug, Clone)]
 pub struct Authorized {
     proof: Proof,
     binding_signature: redpallas::Signature<Binding>,
 }
 
-#[cfg(feature = "std")]
 impl Authorization for Authorized {
     type SpendAuth = redpallas::Signature<SpendAuth>;
 }
 
-#[cfg(feature = "std")]
 impl Authorized {
     /// Constructs the authorizing data for a bundle of actions from its constituent parts.
     pub fn from_parts(proof: Proof, binding_signature: redpallas::Signature<Binding>) -> Self {
@@ -434,7 +415,6 @@ impl Authorized {
     }
 }
 
-#[cfg(feature = "std")]
 impl<V> Bundle<Authorized, V> {
     /// Computes a commitment to the authorizing data within for this bundle.
     ///
@@ -451,7 +431,6 @@ impl<V> Bundle<Authorized, V> {
     }
 }
 
-#[cfg(feature = "std")]
 impl<V: DynamicUsage> DynamicUsage for Bundle<Authorized, V> {
     fn dynamic_usage(&self) -> usize {
         self.actions.dynamic_usage()
@@ -481,11 +460,9 @@ impl<V: DynamicUsage> DynamicUsage for Bundle<Authorized, V> {
 ///
 /// This commitment is non-malleable, in the sense that a bundle's commitment will only
 /// change if the effects of the bundle are altered.
-#[cfg(feature = "std")]
 #[derive(Debug)]
 pub struct BundleCommitment(pub Blake2bHash);
 
-#[cfg(feature = "std")]
 impl From<BundleCommitment> for [u8; 32] {
     fn from(commitment: BundleCommitment) -> Self {
         // The commitment uses BLAKE2b-256.
@@ -494,12 +471,10 @@ impl From<BundleCommitment> for [u8; 32] {
 }
 
 /// A commitment to the authorizing data within a bundle of actions.
-#[cfg(feature = "std")]
 #[derive(Debug)]
 pub struct BundleAuthorizingCommitment(pub Blake2bHash);
 
 /// Generators for property testing.
-#[cfg(feature = "std")]
 #[cfg(any(test, feature = "test-dependencies"))]
 #[cfg_attr(docsrs, doc(cfg(feature = "test-dependencies")))]
 pub mod testing {

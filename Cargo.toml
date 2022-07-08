@@ -34,14 +34,16 @@ halo2_proofs = { version = "0.2", optional = true }
 hex = { version = "0.4", default-features = false }
 lazy_static = { version = "1", optional = true }
 memuse = { version = "0.2", optional = true, features = ["nonempty"] }
-pasta_curves = { version = "0.4", default-features = false, features = ["alloc", "bits"] }
+#pasta_curves = { version = "0.4", default-features = false, features = ["alloc", "bits"] }
 proptest = { version = "1.0.0", optional = true }
 rand = { version = "0.8", default-features = false }
-reddsa = { version = "0.3", default-features = false }
+#reddsa = { version = "0.3", default-features = false }
+reddsa = { git = "https://github.com/jarys/reddsa", branch="alloc-3-plus", default-features = false }
 nonempty = { version = "0.7", optional = true }
 serde = { version = "1.0", optional = true, features = ["derive"] }
 subtle = { version = "2.3", default-features = false }
-zcash_note_encryption = { version = "0.1", default-features = false }
+#zcash_note_encryption = { version = "0.1", default-features = false }
+zcash_note_encryption = { git = "https://github.com/jarys/librustzcash", branch="alloc-3-plus" }
 incrementalmerkletree = { version = "0.3", optional = true }
 
 # Logging
@@ -50,12 +52,18 @@ tracing = { version = "0.1", optional = true }
 # Developer tooling dependencies
 plotters = { version = "0.3.0", optional = true }
 
+[dependencies.pasta_curves]
+git = "https://github.com/jarys/pasta_curves"
+branch = "unboxed-closures"
+default-features = false
+features = ["bits", "unboxed_closures"]
+
 [dev-dependencies]
 criterion = "0.3"
-halo2_gadgets = { version = "0.2", features = ["test-dependencies"] }
+halo2_gadgets = { git = "https://github.com/jarys/halo2_gadgets", branch = "empty" }
 hex = "0.4"
 proptest = "1.0.0"
-zcash_note_encryption = { version = "0.1", features = ["pre-zip-212"] }
+#zcash_note_encryption = { version = "0.1", features = ["pre-zip-212"] }
 
 [target.'cfg(unix)'.dev-dependencies]
 pprof = { version = "0.9", features = ["criterion", "flamegraph"] } # MSRV 1.56

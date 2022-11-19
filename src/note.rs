@@ -186,7 +186,7 @@ impl Note {
     }
 
     /// Returns the rseed value of this note.
-    pub(crate) fn rseed(&self) -> &RandomSeed {
+    pub fn rseed(&self) -> &RandomSeed {
         &self.rseed
     }
 

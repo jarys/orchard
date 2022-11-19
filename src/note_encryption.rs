@@ -14,7 +14,7 @@ use crate::{
     action::Action,
     keys::{
         DiversifiedTransmissionKey, Diversifier, EphemeralPublicKey, EphemeralSecretKey,
-        OutgoingViewingKey, PreparedEphemeralPublicKey, PreparedIncomingViewingKey, SharedSecret,
+        IncomingViewingKey, OutgoingViewingKey, SharedSecret,
     },
     note::{ExtractedNoteCommitment, Nullifier, RandomSeed},
     spec::diversify_hash,
@@ -85,16 +85,6 @@ pub struct OrchardDomain {
     rho: Nullifier,
 }
 
-impl memuse::DynamicUsage for OrchardDomain {
-    fn dynamic_usage(&self) -> usize {
-        self.rho.dynamic_usage()
-    }
-
-    fn dynamic_usage_bounds(&self) -> (usize, Option<usize>) {
-        self.rho.dynamic_usage_bounds()
-    }
-}
-
 impl OrchardDomain {
     /// Constructs a domain that can be used to trial-decrypt this action's output note.
     pub fn for_action<T>(act: &Action<T>) -> Self {
@@ -112,13 +102,12 @@ impl OrchardDomain {
 impl Domain for OrchardDomain {
     type EphemeralSecretKey = EphemeralSecretKey;
     type EphemeralPublicKey = EphemeralPublicKey;
-    type PreparedEphemeralPublicKey = PreparedEphemeralPublicKey;
     type SharedSecret = SharedSecret;
     type SymmetricKey = Hash;
     type Note = Note;
     type Recipient = Address;
     type DiversifiedTransmissionKey = DiversifiedTransmissionKey;
-    type IncomingViewingKey = PreparedIncomingViewingKey;
+    type IncomingViewingKey = IncomingViewingKey;
     type OutgoingViewingKey = OutgoingViewingKey;
     type ValueCommitment = ValueCommitment;
     type ExtractedCommitment = ExtractedNoteCommitment;
@@ -131,10 +120,6 @@ impl Domain for OrchardDomain {
 
     fn get_pk_d(note: &Self::Note) -> Self::DiversifiedTransmissionKey {
         *note.recipient().pk_d()
-    }
-
-    fn prepare_epk(epk: Self::EphemeralPublicKey) -> Self::PreparedEphemeralPublicKey {
-        PreparedEphemeralPublicKey::new(epk)
     }
 
     fn ka_derive_public(
@@ -153,7 +138,7 @@ impl Domain for OrchardDomain {
 
     fn ka_agree_dec(
         ivk: &Self::IncomingViewingKey,
-        epk: &Self::PreparedEphemeralPublicKey,
+        epk: &Self::EphemeralPublicKey,
     ) -> Self::SharedSecret {
         epk.agree(ivk)
     }
@@ -362,7 +347,7 @@ mod tests {
         action::Action,
         keys::{
             DiversifiedTransmissionKey, Diversifier, EphemeralSecretKey, IncomingViewingKey,
-            OutgoingViewingKey, PreparedIncomingViewingKey,
+            OutgoingViewingKey,
         },
         note::{ExtractedNoteCommitment, Nullifier, RandomSeed, TransmittedNoteCiphertext},
         primitives::redpallas,
@@ -380,9 +365,7 @@ mod tests {
             //
 
             // Recipient key material
-            let ivk = PreparedIncomingViewingKey::new(
-                &IncomingViewingKey::from_bytes(&tv.incoming_viewing_key).unwrap(),
-            );
+            let ivk = IncomingViewingKey::from_bytes(&tv.incoming_viewing_key).unwrap();
             let ovk = OutgoingViewingKey::from(tv.ovk);
             let d = Diversifier::from_bytes(tv.default_d);
             let pk_d = DiversifiedTransmissionKey::from_bytes(&tv.default_pk_d).unwrap();

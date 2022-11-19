@@ -35,9 +35,8 @@ impl RandomSeed {
         }
     }
 
-    /// Reads a note's random seed from bytes, given the note's nullifier.
-    ///
-    /// Returns `None` if the nullifier is not for the same note as the seed.
+    ///Read a note's random seed from bytes, given the note's nullifier.
+    ///Returns None if the nullifier is not for the same note as the seed.
     pub fn from_bytes(rseed: [u8; 32], rho: &Nullifier) -> CtOption<Self> {
         let rseed = RandomSeed(rseed);
         let esk = rseed.esk_inner(rho);
@@ -112,20 +111,8 @@ impl PartialEq for Note {
 impl Eq for Note {}
 
 impl Note {
-    /// Creates a `Note` from its component parts.
-    ///
-    /// Returns `None` if a valid [`NoteCommitment`] cannot be derived from the note.
-    ///
-    /// # Caveats
-    ///
-    /// This low-level constructor enforces that the provided arguments produce an
-    /// internally valid `Note`. However, it allows notes to be constructed in a way that
-    /// violates required security checks for note decryption, as specified in
-    /// [Section 4.19] of the Zcash Protocol Specification. Users of this constructor
-    /// should only call it with note components that have been fully validated by
-    /// decrypting a received note according to [Section 4.19].
-    ///
-    /// [Section 4.19]: https://zips.z.cash/protocol/protocol.pdf#saplingandorchardinband
+    ///Create a Note from its component parts. Returns None if a valid
+    ///[`NoteCommitment`] cannot be derived from the note.
     pub fn from_parts(
         recipient: Address,
         value: NoteValue,
@@ -139,6 +126,11 @@ impl Note {
             rseed,
         };
         CtOption::new(note, note.commitment_inner().is_some())
+    }
+
+    ///Get the seed randomness used by the note
+    pub fn random_seed(&self) -> &RandomSeed {
+        &self.rseed
     }
 
     /// Generates a new note.
@@ -194,7 +186,7 @@ impl Note {
     }
 
     /// Returns the rseed value of this note.
-    pub fn rseed(&self) -> &RandomSeed {
+    pub(crate) fn rseed(&self) -> &RandomSeed {
         &self.rseed
     }
 

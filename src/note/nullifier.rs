@@ -1,6 +1,5 @@
 use group::{ff::PrimeField, Group};
 use halo2_proofs::arithmetic::CurveExt;
-use memuse::DynamicUsage;
 use pasta_curves::pallas;
 use rand::RngCore;
 use subtle::CtOption;
@@ -14,9 +13,6 @@ use crate::{
 /// A unique nullifier for a note.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Nullifier(pub(crate) pallas::Base);
-
-// We know that `pallas::Base` doesn't allocate internally.
-memuse::impl_no_dynamic_usage!(Nullifier);
 
 impl Nullifier {
     /// Generates a dummy nullifier for use as $\rho$ in dummy spent notes.

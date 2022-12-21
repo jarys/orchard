@@ -259,7 +259,8 @@ impl ValueCommitTrapdoor {
         ValueCommitTrapdoor(pallas::Scalar::zero())
     }
 
-    pub(crate) fn into_bsk(self) -> redpallas::SigningKey<Binding> {
+    /// Derives Binding Secret Key
+    pub fn into_bsk(self) -> redpallas::SigningKey<Binding> {
         // TODO: impl From<pallas::Scalar> for redpallas::SigningKey.
         self.0.to_repr().try_into().unwrap()
     }

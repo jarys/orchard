@@ -464,8 +464,10 @@ pub trait InProgressSignatures: fmt::Debug {
 /// Marker for a bundle in the process of being built.
 #[derive(Clone, Debug)]
 pub struct InProgress<P, S: InProgressSignatures> {
-    proof: P,
-    sigs: S,
+    /// Proof authorization of the bundle.
+    pub proof: P,
+    /// Signature authorization of the bundle.
+    pub sigs: S,
 }
 
 impl<P: fmt::Debug, S: InProgressSignatures> Authorization for InProgress<P, S> {
@@ -477,7 +479,8 @@ impl<P: fmt::Debug, S: InProgressSignatures> Authorization for InProgress<P, S> 
 /// This struct contains the private data needed to create a [`Proof`] for a [`Bundle`].
 #[derive(Clone, Debug)]
 pub struct Unproven {
-    circuits: Vec<Circuit>,
+    /// Vector of `Circuit`s corresponding to bundle `Action`s.
+    pub circuits: Vec<Circuit>,
 }
 
 impl<S: InProgressSignatures> InProgress<Unproven, S> {
@@ -523,15 +526,16 @@ impl<S: InProgressSignatures, V> Bundle<InProgress<Unproven, S>, V> {
 pub struct SigningParts {
     /// The spend validating key for this action. Used to match spend authorizing keys to
     /// actions they can create signatures for.
-    ak: SpendValidatingKey,
+    pub ak: SpendValidatingKey,
     /// The randomization needed to derive the actual signing key for this note.
-    alpha: pallas::Scalar,
+    pub alpha: pallas::Scalar,
 }
 
 /// Marker for an unauthorized bundle with no signatures.
 #[derive(Clone, Debug)]
 pub struct Unauthorized {
-    bsk: redpallas::SigningKey<Binding>,
+    /// Binding Signature Key
+    pub bsk: redpallas::SigningKey<Binding>,
 }
 
 impl InProgressSignatures for Unauthorized {
@@ -546,8 +550,10 @@ pub struct SigningMetadata {
     ///
     /// These keys are used automatically in [`Bundle<Unauthorized>::prepare`] or
     /// [`Bundle<Unauthorized>::apply_signatures`] to sign dummy spends.
-    dummy_ask: Option<SpendAuthorizingKey>,
-    parts: SigningParts,
+    pub dummy_ask: Option<SpendAuthorizingKey>,
+    /// Data needed for creating a randomized spend validating signature.
+    /// I.e. Spending Key and Spending Key randomizer.
+    pub parts: SigningParts,
 }
 
 /// Marker for a partially-authorized bundle, in the process of being signed.
